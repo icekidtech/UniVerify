@@ -11,7 +11,7 @@
 
 ## Tech Stack
 
-- **Backend**: Python 3.11 + FastAPI
+- **Backend**: Python 3 + FastAPI
 - **Frontend**: Jinja2 Templates + Bootstrap 5 + HTMX
 - **Database**: SQLite (dev), PostgreSQL (prod)
 - **Auth**: OAuth2 + JWT
@@ -21,7 +21,7 @@
 ## Setup
 
 1. **Clone/Navigate**: `cd /home/icekid/Projects/UniVerify`
-2. **Virtual Environment**: `python3.11 -m venv venv && source venv/bin/activate`
+2. **Virtual Environment**: `python3 -m venv venv && source venv/bin/activate`
 3. **Install Dependencies**: `pip install -r requirements.txt`
 4. **Environment Variables**: Copy `.env.example` to `.env` and fill in values.
 5. **Run**: `uvicorn app.main:app --reload`
