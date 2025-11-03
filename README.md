@@ -24,7 +24,7 @@
 2. **Virtual Environment**: `python3 -m venv venv && source venv/bin/activate`
 3. **Install Dependencies**: `pip install -r requirements.txt`
 4. **Environment Variables**: Copy `.env.example` to `.env` and fill in values.
-5. **Run**: `uvicorn app.main:app --reload`
+5. **Run**: `python run.py`
 6. **Access**: `http://127.0.0.1:8000`
 
 ## Roadmap
