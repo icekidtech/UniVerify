@@ -1,0 +1,221 @@
+from fastapi import FastAPI, Request, Form, File, UploadFile, HTTPException, Depends
+from fastapi.staticfiles import StaticFiles
+from fastapi.templating import Jinja2Templates
+from fastapi.responses import RedirectResponse
+from sqlmodel import create_engine, Session, select
+from app.models.models import Student, WhatsAppGroup, AccessToken
+from app.config import settings
+import hashlib
+from difflib import SequenceMatcher
+import os
+import logging
+import jwt_generator as pyjwt
+from datetime import datetime, timedelta, timezone
+from typing import Optional
+
+# Enable debugging
+logging.basicConfig(level=logging.DEBUG)
+
+app = FastAPI(title="UniVerify", debug=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+templates = Jinja2Templates(directory="templates")
+
+# Database setup
+engine = create_engine(settings.database_url, echo=True)
+# Create tables
+from sqlmodel import SQLModel
+SQLModel.metadata.create_all(engine)
+
+# Populate sample WhatsApp groups if not exist
+def populate_groups():
+    with Session(engine) as session:
+        if not session.exec(select(WhatsAppGroup)).first():
+            groups = [
+                WhatsAppGroup(name="Software Engineering", original_link="https://chat.whatsapp.com/SElink", is_active=True),
+                WhatsAppGroup(name="Computer Science", original_link="https://chat.whatsapp.com/CSlink", is_active=True),
+                WhatsAppGroup(name="General Hangout", original_link="https://chat.whatsapp.com/General", is_active=True),
+            ]
+            for g in groups:
+                session.add(g)
+            session.commit()
+
+populate_groups()
+
+def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
+    to_encode = data.copy()
+    if expires_delta:
+        expire = datetime.now(timezone.utc) + expires_delta
+    else:
+        expire = datetime.now(timezone.utc) + timedelta(minutes=15)
+    to_encode.update({"exp": expire})
+    encoded_jwt = pyjwt.encode(to_encode, settings.jwt_secret_key, algorithm="HS256")
+    return encoded_jwt
+
+def verify_token(token: str):
+    try:
+        payload = pyjwt.decode(token, settings.jwt_secret_key, algorithms=["HS256"])
+        return payload
+    except pyjwt.ExpiredSignatureError:
+        return None
+    except pyjwt.InvalidTokenError:
+        return None
+
+@app.get("/")
+async def landing_page(request: Request):
+    return templates.TemplateResponse("index.html", {"request": request})
+
+@app.get("/register")
+async def register_form(request: Request):
+    return templates.TemplateResponse("register.html", {"request": request})
+
+@app.post("/register")
+async def register(
+    request: Request,
+    name: str = Form(...),
+    email: str = Form(...),
+    reg_number: str = Form(...),
+    department: str = Form(...),
+    photo: UploadFile = File(...),
+):
+    errors = []
+
+    # Basic validations
+    if not email.endswith("@gmail.com"):
+        errors.append("Email must be from gmail.com domain.")
+    if department not in ["SE", "CS", "IS", "DS", "CY"]:
+        errors.append("Invalid department.")
+    if not photo.filename or not photo.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
+        errors.append("Photo must be PNG or JPEG.")
+    if photo.size and photo.size > 2 * 1024 * 1024:  # 2MB
+        errors.append("Photo size must be less than 2MB.")
+
+    if errors:
+        return templates.TemplateResponse("register.html", {"request": request, "errors": errors})
+
+    with Session(engine) as session:
+        # Check exact matches
+        if session.exec(select(Student).where(Student.reg_number == reg_number)).first():
+            errors.append("Registration number already exists.")
+        if session.exec(select(Student).where(Student.email == email)).first():
+            errors.append("Email already exists.")
+
+        if errors:
+            return templates.TemplateResponse("register.html", {"request": request, "errors": errors})
+
+        # Fuzzy match name + department (85%+)
+        existing_students = session.exec(select(Student)).all()
+        for student in existing_students:
+            if SequenceMatcher(None, name.lower(), student.name.lower()).ratio() > 0.85 and department == student.department:
+                errors.append("Potential duplicate: similar name and department found.")
+                break
+
+        # Photo hash check
+        photo_content = await photo.read()
+        photo_hash = hashlib.sha256(photo_content).hexdigest()
+        for student in existing_students:
+            if student.photo_path and os.path.exists(student.photo_path):
+                with open(student.photo_path, "rb") as f:
+                    existing_hash = hashlib.sha256(f.read()).hexdigest()
+                if existing_hash == photo_hash:
+                    errors.append("Photo already used.")
+                    break
+
+        if errors:
+            return templates.TemplateResponse("register.html", {"request": request, "errors": errors})
+
+        # Save photo
+        os.makedirs("static/uploads", exist_ok=True)
+        # Sanitize reg_number to avoid path issues
+        sanitized_reg = reg_number.replace('/', '_').replace('\\', '_')
+        photo_filename = f"{sanitized_reg}_{photo.filename}"
+        photo_path = f"static/uploads/{photo_filename}"
+        with open(photo_path, "wb") as f:
+            f.write(photo_content)
+
+        # Create student
+        student = Student(name=name, email=email, reg_number=reg_number, department=department, photo_path=photo_path)
+        session.add(student)
+        session.commit()
+
+        return RedirectResponse(url="/login", status_code=303)
+
+@app.get("/login")
+async def login_form(request: Request):
+    return templates.TemplateResponse("login.html", {"request": request})
+
+@app.post("/login")
+async def login(
+    request: Request,
+    email: str = Form(...),
+    reg_number: str = Form(...),
+):
+    with Session(engine) as session:
+        student = session.exec(select(Student).where(Student.email == email, Student.reg_number == reg_number)).first()
+        if not student:
+            return templates.TemplateResponse("login.html", {"request": request, "error": "Invalid credentials."})
+
+        if student.status == "rejected":
+            session.delete(student)
+            session.commit()
+            return templates.TemplateResponse("login.html", {"request": request, "error": "Your account has been rejected and deleted."})
+
+        # Create JWT token
+        access_token = create_access_token(data={"sub": str(student.id)}, expires_delta=timedelta(days=7))
+        response = RedirectResponse(url="/dashboard", status_code=303)
+        response.set_cookie(key="access_token", value=access_token, httponly=True)
+        return response
+
+def get_current_user(request: Request):
+    token = request.cookies.get("access_token")
+    if not token:
+        raise HTTPException(status_code=401, detail="Not authenticated")
+    payload = verify_token(token)
+    if not payload:
+        raise HTTPException(status_code=401, detail="Invalid token")
+    user_id = int(payload["sub"])
+    with Session(engine) as session:
+        student = session.get(Student, user_id)
+        if not student:
+            raise HTTPException(status_code=401, detail="User not found")
+        return student
+
+@app.get("/dashboard")
+async def dashboard(request: Request, current_user: Student = Depends(get_current_user)):
+    links = []
+    if current_user.status == "approved":
+        # Generate temp links on demand
+        with Session(engine) as session:
+            groups = session.exec(select(WhatsAppGroup).where(WhatsAppGroup.is_active == True)).all()
+            for group in groups:
+                # Check if token already exists and not used
+                existing_token = session.exec(select(AccessToken).where(AccessToken.student_id == current_user.id, AccessToken.group_id == group.id, AccessToken.used == False)).first()
+                if existing_token and existing_token.expires_at > datetime.now(timezone.utc):
+                    token = existing_token.token
+                else:
+                    # Create new token
+                    token_data = {"student_id": current_user.id, "group_id": group.id, "exp": datetime.now(timezone.utc) + timedelta(days=7)}
+                    token = pyjwt.encode(token_data, settings.jwt_secret_key, algorithm="HS256")
+                    access_token = AccessToken(student_id=current_user.id, group_id=group.id, token=token, expires_at=datetime.now(timezone.utc) + timedelta(days=7))
+                    session.add(access_token)
+                    session.commit()
+                links.append({"name": group.name, "url": f"/r/{token}"})
+    return templates.TemplateResponse("dashboard.html", {"request": request, "user": current_user, "links": links})
+
+@app.get("/r/{token}")
+async def redirect_link(token: str):
+    payload = verify_token(token)
+    if not payload or "student_id" not in payload or "group_id" not in payload:
+        raise HTTPException(status_code=400, detail="Invalid token")
+    student_id = payload["student_id"]
+    group_id = payload["group_id"]
+    with Session(engine) as session:
+        token_obj = session.exec(select(AccessToken).where(AccessToken.token == token)).first()
+        if not token_obj or token_obj.used:
+            raise HTTPException(status_code=400, detail="Token already used or invalid")
+        group = session.get(WhatsAppGroup, group_id)
+        if not group:
+            raise HTTPException(status_code=404, detail="Group not found")
+        # Mark as used
+        token_obj.used = True
+        session.commit()
+        return RedirectResponse(url=group.original_link)
