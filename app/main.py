@@ -9,7 +9,7 @@ import hashlib
 from difflib import SequenceMatcher
 import os
 import logging
-import jwt_generator as pyjwt
+import jwt  # Add this - use the actual PyJWT library
 from datetime import datetime, timedelta, timezone
 from typing import Optional
 
@@ -48,16 +48,16 @@ def create_access_token(data: dict, expires_delta: Optional[timedelta] = None):
     else:
         expire = datetime.now(timezone.utc) + timedelta(minutes=15)
     to_encode.update({"exp": expire})
-    encoded_jwt = pyjwt.encode(to_encode, settings.jwt_secret_key, algorithm="HS256")
+    encoded_jwt = jwt.encode(to_encode, settings.jwt_secret_key, algorithm="HS256")  # Use jwt instead
     return encoded_jwt
 
 def verify_token(token: str):
     try:
-        payload = pyjwt.decode(token, settings.jwt_secret_key, algorithms=["HS256"])
+        payload = jwt.decode(token, settings.jwt_secret_key, algorithms=["HS256"])  # Use jwt instead
         return payload
-    except pyjwt.ExpiredSignatureError:
+    except jwt.ExpiredSignatureError:
         return None
-    except pyjwt.InvalidTokenError:
+    except jwt.InvalidTokenError:
         return None
 
 @app.get("/")
