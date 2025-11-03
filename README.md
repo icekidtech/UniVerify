@@ -38,6 +38,6 @@
 
 Prepared by Idopise Udoh, Director of Software, '024 Series.
 
-For issues or PRs, contact idopise.udoh@uniuyo.edu.ng.
+For issues or PRs, contact edwinidopise@gmail.com.
 
-**#024Leads**
+**#024**
