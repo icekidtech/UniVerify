@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Admin Dashboard</title>
+    <link rel="stylesheet" href="/UniVerify/static/css/admin_dashboard.css">
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <img src="/UniVerify/static/images/FOCOSA_LOGO-removebg-preview.png" alt="Faculty Logo">
+        <h1>Faculty Admin Dashboard</h1>
+        <div>
+            <a href="#">Dashboard</a>
+            <a href="#">Request</a>
+            <a href="#">Users</a>
+            <a href="#">Settings</a>
+        </div>
+    </div>
+
+    <!-- Dashboard Title -->
+    <div class="dashboard-title">
+        <h2>System Administration</h2>
+    </div>
+
+    <!-- Top Stats -->
+    <div class="stats-container">
+        <div class="card blue">
+            <h3>Total Applicants</h3>
+            <p>125</p>
+        </div>
+        <div class="card green">
+            <h3>Approved Applicants</h3>
+            <p>98</p>
+        </div>
+        <div class="card teal">
+            <h3>Pending Approvals</h3>
+            <p>27</p>
+        </div>
+        <div class="card yellow">
+            <h3>Faculty Members</h3>
+            <p>15</p>
+        </div>
+    </div>
+
+    <!-- System Overview and Recent Activities -->
+    <div class="system-section">
+        <div class="overview">
+            <h4>System Overview</h4>
+            <table>
+                <tr>
+                    <th>User Distribution</th>
+                    <th>Count</th>
+                </tr>
+                <tr>
+                    <td>Applicants</td>
+                    <td>125</td>
+                </tr>
+                <tr>
+                    <td>Approved Applicants</td>
+                    <td>98</td>
+                </tr>
+                <tr>
+                    <td>Faculty Members</td>
+                    <td>15</td>
+                </tr>
+                <tr>
+                    <td>Database Status</td>
+                    <td><span class="status connected">Connected</span></td>
+                </tr>
+                <tr>
+                    <td>Last Backup</td>
+                    <td><span class="status not-configured">Not Configured</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="activities">
+            <h4>Recent Admin Activities</h4>
+            <p><strong>Admin1</strong> approved 5 new applicants</p>
+            <p><small>2025-11-05 10:30 AM</small></p>
+            <hr>
+            <p><strong>Admin2</strong> updated faculty member details</p>
+            <p><small>2025-11-04 09:10 AM</small></p>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+        <h4>Quick Actions</h4>
+        <div class="action-buttons">
+            <button class="btn">View Applicants</button>
+            <button class="btn">View Faculty</button>
+            <button class="btn">Generate Report</button>
+            <button class="btn">System Settings</button>
+        </div>
+    </div>
+
+    <footer>
+        © 2025 Faculty Management System | All Rights Reserved
+    </footer>
+
+</body>
+</html>

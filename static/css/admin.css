@@ -91,7 +91,7 @@ table {
   background: white;
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(27, 4, 4, 0.1);
 }
 .image {
   background: #2563eb;
