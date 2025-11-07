@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Save Your Passcode - UniVerify</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-warning">
+                    <div class="card-header bg-warning text-dark">
+                        <h5 class="mb-0">⚠️ Important: Save Your Passcode</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="text-muted">Your unique passcode has been generated. You will need this to log in alongside your email and registration number.</p>
+                        
+                        <div class="alert alert-info">
+                            <strong>Your Passcode:</strong>
+                        </div>
+                        
+                        <div class="bg-light p-4 rounded mb-3 text-center">
+                            <code style="font-size: 1.5em; letter-spacing: 2px;">{{ passcode }}</code>
+                            <br>
+                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="copyToClipboard()">
+                                📋 Copy to Clipboard
+                            </button>
+                        </div>
+
+                        <div class="alert alert-danger" role="alert">
+                            <strong>⚠️ Important!</strong>
+                            <ul class="mb-0 mt-2">
+                                <li>Save this passcode in a <strong>safe place</strong></li>
+                                <li>Do NOT share it with anyone</li>
+                                <li>You cannot retrieve it if lost</li>
+                                <li>Write it down or save it securely</li>
+                            </ul>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-check">
+                                <input type="checkbox" class="form-check-input" id="confirmCheckbox" required>
+                                <span class="form-check-label">I have saved my passcode in a safe place</span>
+                            </label>
+                        </div>
+
+                        <a href="/login" class="btn btn-primary w-100" id="continueBtn" disabled>
+                            I've Saved My Passcode
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function copyToClipboard() {
+            const passcode = "{{ passcode }}";
+            navigator.clipboard.writeText(passcode).then(() => {
+                alert('Passcode copied to clipboard!');
+            });
+        }
+
+        document.getElementById('confirmCheckbox').addEventListener('change', function() {
+            document.getElementById('continueBtn').disabled = !this.checked;
+        });
+    </script>
+</body>
+</html>
