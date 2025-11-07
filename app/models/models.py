@@ -6,9 +6,11 @@ class Student(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     name: str
     email: str = Field(unique=True)
+    phone: str = Field(unique=True)  # NEW
     reg_number: str = Field(unique=True)
     department: str
     photo_path: str
+    passcode: str  # NEW - unique identifier for login
     status: str = "pending"
     submitted_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     approved_at: Optional[datetime] = None
