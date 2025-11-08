@@ -1,0 +1,53 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Manage Users{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-title">
+    <h2>All Students</h2>
+</div>
+
+<div class="overview" style="margin: 0;">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Reg No.</th>
+                <th>Department</th>
+                <th>Phone</th>
+                <th>Status</th>
+                <th>Registered</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.reg_number }}</td>
+                <td>{{ student.department }}</td>
+                <td>{{ student.phone }}</td>
+                <td>
+                    {% if student.status == 'approved' %}
+                        <span class="status approved">Approved</span>
+                    {% elif student.status == 'pending' %}
+                        <span class="status pending">Pending</span>
+                    {% elif student.status == 'rejected' %}
+                        <span class="status rejected">Rejected</span>
+                    {% endif %}
+                </td>
+                <td>{{ student.submitted_at.strftime('%Y-%m-%d %H:%M') if student.submitted_at else 'N/A' }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if not students %}
+    <p class="text-muted mt-3" style="padding: 20px;">No students found.</p>
+    {% endif %}
+</div>
+
+{% endblock %}
