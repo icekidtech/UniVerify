@@ -1,0 +1,376 @@
+/* Global Branding and Common Styles */
+
+:root {
+    --primary-color: #003366;
+    --primary-dark: #0056b3;
+    --success-color: #15361d;
+    --warning-color: #ffc107;
+    --danger-color: #dc2626;
+    --light-bg: #f4f6f9;
+    --text-dark: #333;
+    --text-muted: #666;
+    --border-color: #ddd;
+    --shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    background-color: var(--light-bg);
+    color: var(--text-dark);
+}
+
+/* Typography */
+h1, h2, h3, h4, h5, h6 {
+    color: var(--text-dark);
+    font-weight: 600;
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+    border-color: var(--primary-dark);
+}
+
+.btn-success {
+    background-color: var(--success-color);
+    border-color: var(--success-color);
+    color: white;
+}
+
+.btn-success:hover {
+    background-color: #0d2312;
+    border-color: #0d2312;
+}
+
+.btn-danger {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+    color: white;
+}
+
+.btn-danger:hover {
+    background-color: #b91c1c;
+    border-color: #b91c1c;
+}
+
+.btn-warning {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: black;
+}
+
+.btn-warning:hover {
+    background-color: #e0a800;
+    border-color: #e0a800;
+}
+
+/* Cards */
+.card {
+    border-radius: 8px;
+    box-shadow: var(--shadow);
+    border: 1px solid #eee;
+}
+
+.card-header {
+    background-color: var(--primary-color);
+    color: white;
+    border-bottom: 1px solid #ddd;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table th {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 12px;
+    text-align: left;
+    font-weight: 600;
+}
+
+table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+table tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Forms */
+.form-control {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px 12px;
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 0.2rem rgba(0, 51, 102, 0.25);
+}
+
+.form-label {
+    color: var(--text-dark);
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+/* Alerts */
+.alert {
+    border-radius: 4px;
+    border: none;
+}
+
+.alert-danger {
+    background-color: #fee;
+    color: #c33;
+}
+
+.alert-success {
+    background-color: #efe;
+    color: #3c3;
+}
+
+.alert-warning {
+    background-color: #ffeaa7;
+    color: #856404;
+}
+
+.alert-info {
+    background-color: #e7f3ff;
+    color: #004085;
+}
+
+/* Status Badges */
+.status {
+    display: inline-block;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.status.connected {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.status.not-configured {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.status.pending {
+    background-color: var(--warning-color);
+    color: #000;
+}
+
+.status.approved {
+    background-color: var(--success-color);
+    color: white;
+}
+
+.status.rejected {
+    background-color: var(--danger-color);
+    color: white;
+}
+
+/* Footer */
+footer {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+    }
+
+    h1 {
+        font-size: 24px;
+    }
+
+    h2 {
+        font-size: 20px;
+    }
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: var(--primary-color) !important;
+    padding: 10px 40px !important;
+}
+
+.navbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: bold;
+    font-size: 18px !important;
+}
+
+.navbar-brand img {
+    height: 45px;
+    width: auto;
+}
+
+.navbar-brand span {
+    color: white;
+}
+
+/* Navbar text and links */
+.navbar-text {
+    color: white !important;
+    font-size: 14px;
+    white-space: nowrap;
+}
+
+.nav-link {
+    color: white !important;
+    transition: opacity 0.3s;
+}
+
+.nav-link:hover {
+    opacity: 0.8;
+}
+
+/* Logout link styling */
+.logout-nav-link {
+    background-color: var(--danger-color) !important;
+    color: white !important;
+    padding: 8px 15px !important;
+    border-radius: 6px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.logout-nav-link:hover {
+    background-color: #b91c1c !important;
+    text-decoration: none !important;
+}
+
+/* Navbar responsiveness */
+@media (max-width: 992px) {
+    .navbar-brand span {
+        display: none;
+    }
+    
+    .navbar {
+        padding: 10px 20px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .navbar-brand img {
+        height: 35px;
+    }
+    
+    .navbar-text {
+        font-size: 12px;
+    }
+}
+
+/* Add these styles to the existing global.css file */
+
+/* Main Content */
+.main-content {
+    min-height: calc(100vh - 200px);
+}
+
+/* Footer */
+.site-footer {
+    background-color: var(--primary-color);
+    color: white;
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+}
+
+.site-footer p {
+    margin: 0;
+}
+
+/* Auth Logo Styling */
+.auth-logo {
+    text-align: center;
+    margin-bottom: 25px;
+}
+
+.auth-logo img {
+    height: 80px;
+    width: auto;
+}
+
+/* Dashboard Header */
+.dashboard-header {
+    margin-bottom: 30px;
+}
+
+.dashboard-header h1 {
+    font-size: 32px;
+    font-weight: bold;
+    color: var(--primary-color);
+    margin-bottom: 15px;
+}
+
+.dashboard-header p {
+    font-size: 16px;
+    color: #666;
+    margin: 8px 0;
+}
+
+/* Dashboard Status */
+.dashboard-status {
+    margin-bottom: 30px;
+    padding: 15px;
+    background: #f8f9fa;
+    border-radius: 6px;
+}
+
+/* Dashboard Links Section */
+.dashboard-links-section {
+    margin-top: 30px;
+}
+
+.dashboard-links-section h3 {
+    color: var(--primary-color);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.dashboard-links-section .list-group-item {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    transition: all 0.3s;
+}
+
+.dashboard-links-section .list-group-item:hover {
+    background-color: #f8f9fa;
+    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.1);
+}

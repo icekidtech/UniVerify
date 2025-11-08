@@ -1,0 +1,211 @@
+/* Passcode Backup Page Styles */
+
+.passcode-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #003366 0%, #0056b3 100%);
+    padding: 20px;
+}
+
+.passcode-container {
+    max-width: 500px;
+    width: 100%;
+}
+
+.passcode-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    border: 2px solid #ffc107;
+    overflow: hidden;
+}
+
+.passcode-header {
+    background-color: #ffc107;
+    color: #000;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.passcode-header-icon {
+    font-size: 24px;
+}
+
+.passcode-body {
+    padding: 30px;
+}
+
+.passcode-info {
+    color: #666;
+    font-size: 14px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.passcode-label {
+    background-color: #e7f3ff;
+    color: #004085;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.passcode-display {
+    background: linear-gradient(135deg, #f5f5f5 0%, #eeeeee 100%);
+    padding: 20px;
+    border-radius: 8px;
+    text-align: center;
+    margin-bottom: 20px;
+    border: 2px dashed #003366;
+}
+
+.passcode-code {
+    font-family: 'Courier New', monospace;
+    font-size: 24px;
+    letter-spacing: 4px;
+    color: #003366;
+    font-weight: bold;
+    word-break: break-all;
+    margin-bottom: 15px;
+}
+
+.copy-btn {
+    background-color: #003366;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background-color 0.3s;
+    margin-top: 10px;
+}
+
+.copy-btn:hover {
+    background-color: #0056b3;
+}
+
+.copy-btn:active {
+    transform: scale(0.95);
+}
+
+.warning-box {
+    background-color: #fee;
+    border: 2px solid #dc2626;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.warning-box h5 {
+    color: #dc2626;
+    margin-bottom: 10px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.warning-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.warning-box li {
+    color: #c33;
+    font-size: 14px;
+    margin: 8px 0;
+    padding-left: 20px;
+    position: relative;
+}
+
+.warning-box li:before {
+    content: "⚠";
+    position: absolute;
+    left: 0;
+}
+
+.checkbox-group {
+    margin: 20px 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #003366;
+}
+
+.checkbox-group label {
+    cursor: pointer;
+    color: #333;
+    font-size: 14px;
+    margin: 0;
+    font-weight: 500;
+}
+
+.continue-btn {
+    width: 100%;
+    padding: 12px;
+    background-color: #003366;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.continue-btn:hover:not(:disabled) {
+    background-color: #0056b3;
+}
+
+.continue-btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.success-message {
+    background-color: #d4edda;
+    color: #155724;
+    padding: 12px;
+    border-radius: 6px;
+    margin-bottom: 15px;
+    border-left: 4px solid #155724;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .passcode-body {
+        padding: 20px;
+    }
+
+    .passcode-code {
+        font-size: 18px;
+        letter-spacing: 3px;
+    }
+
+    .warning-box h5 {
+        font-size: 14px;
+    }
+
+    .continue-btn {
+        padding: 10px;
+        font-size: 14px;
+    }
+}
