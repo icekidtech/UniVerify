@@ -3,16 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UniVerify - Landing Page</title>
+    <title>Faculty of Computing Student Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/landing.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <h1 class="text-center">Welcome to UniVerify</h1>
-        <p class="text-center">Secure Student Verification Portal for '024 Series WhatsApp Community</p>
-        <div class="text-center">
-            <a href="/register" class="btn btn-primary">Register Now</a>
-            <a href="/login" class="btn btn-secondary">Login</a>
+    <div class="landing-page">
+        <div class="landing-container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <img src="/static/images/FOCOSA_LOGO-removebg-preview.png" alt="FOCOSA Logo" style="height: 120px; width: auto; margin-bottom: 20px;">
+            </div>
+            <h1>
+                <span class="title-emoji">🎓</span>
+                Faculty of Computing Student Management System
+            </h1>
+            <p>Secure Student Verification Portal for '024 Series WhatsApp Community</p>
+            
+            <div class="btn-group-custom">
+                <a href="/register" class="btn-landing btn-landing-primary">Register Now</a>
+                <a href="/login" class="btn-landing btn-landing-secondary">Student Login</a>
+                <a href="/admin/login" class="btn-landing btn-landing-warning">Admin Login</a>
+            </div>
+
+            <div class="landing-features">
+                <h3>Key Features</h3>
+                <ul class="features-list">
+                    <li>Secure Student Registration</li>
+                    <li>Passcode-Based Authentication</li>
+                    <li>Admin Management System</li>
+                    <li>Role-Based Access Control</li>
+                </ul>
+            </div>
         </div>
     </div>
 </body>

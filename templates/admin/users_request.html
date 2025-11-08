@@ -1,65 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Admin Dashboard</title>
-  <link rel="stylesheet" href="/UniVerify/static/css/admin.css" />
-</head>
-<body>
-  <!-- Navbar -->
-  <header>
-    <div>
-      <img src="/UniVerify/static/img/FOCOSA_LOGO-removebg-preview.png" alt="Faculty Logo" />
-      <span class="header-title">Faculty Admin Dashboard</span>
-    </div>
-    <button class="logout-btn">Logout</button>
-  </header>
+{% extends "admin/base_admin.html" %}
 
-  <!-- Main Container -->
-  <div class="content">
-    <nav>
-      <a href="admin_dashboard.html">Dashboard</a>
-      <a href="users_request.html">Requests</a>
-      <a href="admin_users.html">Users</a>
-      <a href="admin_settings.html">Settings</a>
-    </nav>
+{% block title %}Pending Requests{% endblock %}
 
-    <!-- Main Content -->
-    <main>
-      <h2>Pending Requests</h2>
-      <table>
-        <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Reg NO</th>
-          <th>Department</th>
-          <th>Image</th>
-          <th> Request</th>
-          <th>Actions</th>
-        </tr>
-        <tr>
-          <td>1</td>
-          <td>John Doe</td>
-          <td> 24/SC/CO/357 </td>
-          <td> Computer Science </td>
-          <td><button class="image">View</button></td>
-          <td>Pending</td>
-          <td>
-            <button class="approve">Approve</button>
-            <button class="decline">Decline</button>
-            <button class="delete">Delete</button>
-          </td>
-        </tr>
-       
-      </table>
-    </main>
-  </div>
+{% block content %}
 
-  <!-- Footer -->
-  <footer>
-    © 2025 Faculty of Computer Science. All rights reserved. <br>
-    Terms of service. <br> Privacy policy
-  </footer>
-</body>
-</html>
+<div class="dashboard-title">
+    <h2>Pending Student Requests</h2>
+</div>
+
+<div class="overview" style="margin: 0;">
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Reg No.</th>
+                <th>Department</th>
+                <th>Phone</th>
+                <th>Photo</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for student in students %}
+            <tr>
+                <td>{{ student.id }}</td>
+                <td>{{ student.name }}</td>
+                <td>{{ student.email }}</td>
+                <td>{{ student.reg_number }}</td>
+                <td>{{ student.department }}</td>
+                <td>{{ student.phone }}</td>
+                <td><a href="/{{ student.photo_path }}" target="_blank" class="btn btn-sm btn-info">View</a></td>
+                <td>
+                    <form style="display: inline;" action="/admin/approve/{{ student.id }}" method="post">
+                        <button type="submit" class="btn btn-sm btn-success action-confirm">Approve</button>
+                    </form>
+                    <form style="display: inline;" action="/admin/reject/{{ student.id }}" method="post">
+                        <button type="submit" class="btn btn-sm btn-danger action-confirm">Reject</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% if not students %}
+    <p class="text-muted mt-3" style="padding: 20px;">No pending requests at the moment.</p>
+    {% endif %}
+</div>
+
+{% endblock %}

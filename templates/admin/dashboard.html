@@ -1,0 +1,87 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-title">
+    <h2>System Administration Dashboard</h2>
+</div>
+
+<!-- Top Stats -->
+<div class="stats-container">
+    <div class="card blue">
+        <h3>Total Students</h3>
+        <p>{{ stats.total }}</p>
+    </div>
+    <div class="card green">
+        <h3>Approved Students</h3>
+        <p>{{ stats.approved }}</p>
+    </div>
+    <div class="card yellow">
+        <h3>Pending Approvals</h3>
+        <p>{{ stats.pending }}</p>
+    </div>
+    <div class="card teal">
+        <h3>Rejected Applications</h3>
+        <p>{{ stats.rejected }}</p>
+    </div>
+</div>
+
+<!-- System Overview and Recent Activities -->
+<div class="system-section">
+    <div class="overview">
+        <h4>System Overview</h4>
+        <table>
+            <tr>
+                <th>Metric</th>
+                <th>Value</th>
+            </tr>
+            <tr>
+                <td>Total Applications</td>
+                <td>{{ stats.total }}</td>
+            </tr>
+            <tr>
+                <td>Approved Students</td>
+                <td>{{ stats.approved }}</td>
+            </tr>
+            <tr>
+                <td>Pending Applications</td>
+                <td>{{ stats.pending }}</td>
+            </tr>
+            <tr>
+                <td>System Status</td>
+                <td><span class="status connected">Operational</span></td>
+            </tr>
+            {% if admin.role == 'super_admin' %}
+            <tr>
+                <td>Admin Accounts</td>
+                <td>Active</td>
+            </tr>
+            {% endif %}
+        </table>
+    </div>
+
+    <div class="activities">
+        <h4>Quick Links</h4>
+        <p><a href="/admin/requests" class="btn btn-sm" style="display: block; margin-bottom: 10px;">View Requests</a></p>
+        <p><a href="/admin/users" class="btn btn-sm" style="display: block; margin-bottom: 10px;">View All Users</a></p>
+        {% if admin.role == 'super_admin' %}
+        <p><a href="/admin/manage-admins" class="btn btn-sm" style="display: block; margin-bottom: 10px;">Manage Admins</a></p>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="quick-actions">
+    <h4>Quick Actions</h4>
+    <div class="action-buttons">
+        <button class="btn" onclick="location.href='/admin/requests'">Process Requests</button>
+        <button class="btn" onclick="location.href='/admin/users'">Manage Users</button>
+        {% if admin.role == 'super_admin' %}
+        <button class="btn" onclick="location.href='/admin/manage-admins'">Manage Admins</button>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

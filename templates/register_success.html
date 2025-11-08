@@ -3,15 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registration Success - UniVerify</title>
+    <title>Registration Successful - Faculty of Computing Student Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/auth.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="alert alert-success">
-            {{ message }}
+    <div class="auth-container">
+        <div class="auth-card">
+            <div style="text-align: center; margin-bottom: 25px;">
+                <img src="/static/images/FOCOSA_LOGO-removebg-preview.png" alt="FOCOSA Logo" style="height: 80px; width: auto;">
+            </div>
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div style="font-size: 60px; margin-bottom: 15px;">✓</div>
+                <h1>Registration Successful!</h1>
+            </div>
+
+            <p class="subtitle">Your account has been created successfully. Your application is now pending review.</p>
+
+            <div style="background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 6px; padding: 15px; margin: 20px 0; color: #155724;">
+                <strong>What's Next?</strong>
+                <ul style="margin-bottom: 0; margin-top: 10px; padding-left: 20px;">
+                    <li>Your profile will be reviewed by an administrator</li>
+                    <li>You will receive a notification once approved</li>
+                    <li>Approved students can access WhatsApp community links</li>
+                </ul>
+            </div>
+
+            <div class="auth-footer" style="border-top: none; margin-top: 30px;">
+                <p style="margin-bottom: 15px;"><a href="/login" class="btn btn-primary w-100">Return to Login</a></p>
+                <p><a href="/">Back to Home</a></p>
+            </div>
         </div>
-        <a href="/" class="btn btn-secondary">Back to Home</a>
     </div>
 </body>
 </html>

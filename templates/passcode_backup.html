@@ -3,69 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Save Your Passcode - UniVerify</title>
+    <title>Save Your Passcode - Faculty of Computing Student Management System</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/passcode.css">
 </head>
 <body>
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card border-warning">
-                    <div class="card-header bg-warning text-dark">
-                        <h5 class="mb-0">⚠️ Important: Save Your Passcode</h5>
+    <div class="passcode-page">
+        <div class="passcode-container">
+            <div class="passcode-card">
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <img src="/static/images/FOCOSA_LOGO-removebg-preview.png" alt="FOCOSA Logo" style="height: 70px; width: auto;">
+                </div>
+                <div class="passcode-header">
+                    <span class="passcode-header-icon">⚠️</span>
+                    Important: Save Your Passcode
+                </div>
+
+                <div class="passcode-body">
+                    <p class="passcode-info">
+                        Your unique passcode has been generated. You will need this along with your email and registration number to log in to the system. Please save it in a safe place.
+                    </p>
+
+                    <div class="passcode-label">
+                        Your Passcode:
                     </div>
-                    <div class="card-body">
-                        <p class="text-muted">Your unique passcode has been generated. You will need this to log in alongside your email and registration number.</p>
-                        
-                        <div class="alert alert-info">
-                            <strong>Your Passcode:</strong>
-                        </div>
-                        
-                        <div class="bg-light p-4 rounded mb-3 text-center">
-                            <code style="font-size: 1.5em; letter-spacing: 2px;">{{ passcode }}</code>
-                            <br>
-                            <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="copyToClipboard()">
-                                📋 Copy to Clipboard
-                            </button>
-                        </div>
 
-                        <div class="alert alert-danger" role="alert">
-                            <strong>⚠️ Important!</strong>
-                            <ul class="mb-0 mt-2">
-                                <li>Save this passcode in a <strong>safe place</strong></li>
-                                <li>Do NOT share it with anyone</li>
-                                <li>You cannot retrieve it if lost</li>
-                                <li>Write it down or save it securely</li>
-                            </ul>
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-check">
-                                <input type="checkbox" class="form-check-input" id="confirmCheckbox" required>
-                                <span class="form-check-label">I have saved my passcode in a safe place</span>
-                            </label>
-                        </div>
-
-                        <a href="/login" class="btn btn-primary w-100" id="continueBtn" disabled>
-                            I've Saved My Passcode
-                        </a>
+                    <div class="passcode-display">
+                        <div class="passcode-code">{{ passcode }}</div>
+                        <button type="button" class="copy-btn" title="Copy passcode to clipboard">
+                            📋 Copy to Clipboard
+                        </button>
                     </div>
+
+                    <div class="warning-box">
+                        <h5>
+                            <span>⚠️</span>
+                            Important Security Notice
+                        </h5>
+                        <ul>
+                            <li>Save this passcode in a <strong>safe and secure place</strong></li>
+                            <li>Do <strong>NOT</strong> share this passcode with anyone</li>
+                            <li>If you lose it, <strong>you cannot retrieve it</strong></li>
+                            <li>Write it down or save it in a password manager</li>
+                            <li>You will need it every time you log in</li>
+                        </ul>
+                    </div>
+
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="confirmCheckbox" required>
+                        <label for="confirmCheckbox">
+                            I have saved my passcode in a safe place and understand the security implications
+                        </label>
+                    </div>
+
+                    <a href="/login" class="continue-btn" id="continueBtn" disabled>
+                        I've Saved My Passcode - Continue to Login
+                    </a>
                 </div>
             </div>
         </div>
     </div>
 
-    <script>
-        function copyToClipboard() {
-            const passcode = "{{ passcode }}";
-            navigator.clipboard.writeText(passcode).then(() => {
-                alert('Passcode copied to clipboard!');
-            });
-        }
-
-        document.getElementById('confirmCheckbox').addEventListener('change', function() {
-            document.getElementById('continueBtn').disabled = !this.checked;
-        });
-    </script>
+    <script src="/static/js/passcode.js"></script>
 </body>
 </html>
