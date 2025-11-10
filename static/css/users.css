@@ -86,7 +86,7 @@ body {
 
 .main-content h2 {
   font-size: 22px;
-  color: #0a2a66;
+  color: var(--primary-color);
   margin-bottom: 20px;
 }
 
@@ -119,16 +119,25 @@ td img {
   border-radius: 50%;
   object-fit: cover;
 }
-.view {
-  background-color: #0a2a66;
+
+.btn-view {
+  background-color: var(--primary-color);
   color: white;
   border: none;
   padding: 8px 16px;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
 }
 
+.btn-view:hover {
+  background-color: #002244;
+}
+
+/* Status badges */
 .status {
   padding: 6px 12px;
   border-radius: 15px;
@@ -138,15 +147,184 @@ td img {
 }
 
 .status.approved {
-  background-color: #27ae60;
+  background-color: var(--success-color);
   color: white;
 }
 
-/* Footer */
-.footer {
-  background-color: #0a2a66;
+.status.pending {
+  background-color: var(--warning-color);
+  color: black;
+}
+
+.status.rejected {
+  background-color: var(--danger-color);
   color: white;
-  text-align: center;
-  padding: 15px 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+
+  .table-container {
+    padding: 15px;
+    overflow-x: scroll;
+  }
+
+  th, td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .btn-view {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 10px;
+  }
+
+  .table-container {
+    padding: 10px;
+  }
+
+  th, td {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  td img {
+    width: 30px;
+    height: 30px;
+  }
+}
+
+/* Users Management Page */
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+}
+
+.main-content h2 {
+  font-size: 22px;
+  color: var(--primary-color);
+  margin-bottom: 20px;
+}
+
+.table-container {
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+thead {
+  background-color: #f0f0f0;
+}
+
+th, td {
+  padding: 12px 15px;
+  border-bottom: 1px solid #ddd;
+}
+
+td img {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.btn-view {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: 500;
+  text-decoration: none;
+  display: inline-block;
+  transition: background-color 0.3s;
+}
+
+.btn-view:hover {
+  background-color: #002244;
+}
+
+/* Status badges */
+.status {
+  padding: 6px 12px;
+  border-radius: 15px;
   font-size: 14px;
+  font-weight: 500;
+  text-transform: capitalize;
+}
+
+.status.approved {
+  background-color: var(--success-color);
+  color: white;
+}
+
+.status.pending {
+  background-color: var(--warning-color);
+  color: black;
+}
+
+.status.rejected {
+  background-color: var(--danger-color);
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 15px;
+  }
+
+  .table-container {
+    padding: 15px;
+    overflow-x: scroll;
+  }
+
+  th, td {
+    padding: 8px 10px;
+    font-size: 14px;
+  }
+
+  .btn-view {
+    padding: 6px 12px;
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 10px;
+  }
+
+  .table-container {
+    padding: 10px;
+  }
+
+  th, td {
+    padding: 6px 8px;
+    font-size: 12px;
+  }
+
+  td img {
+    width: 30px;
+    height: 30px;
+  }
 }

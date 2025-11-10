@@ -1,95 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Faculty Admin Dashboard - Users</title>
-  <link rel="stylesheet" href="/UniVerify/static/css/users.css">
-</head>
-<body>
+{% extends "admin/base_admin.html" %}
 
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-left">
-      <img src="/UniVerify/static/images/FOCOSA_LOGO-removebg-preview.png" alt="Logo" class="logo">
-      <h1>Faculty Admin Dashboard</h1>
-    </div>
-    <button class="logout-btn">Logout</button>
-  </nav>
+{% block title %}Users - Faculty of Computing Student Management System{% endblock %}
 
-  <!-- Layout Wrapper -->
-  <div class="dashboard-container">
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/users.css">
+{% endblock %}
 
-    <!-- Sidebar -->
-    <aside class="sidebar">
-      <ul>
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="requests.html">Requests</a></li>
-        <li class="active"><a href="users.html">Users</a></li>
-        <li><a href="settings.html">Settings</a></li>
-      </ul>
-    </aside>
+{% block content %}
+<div class="main-content">
+  <h2>All Users</h2>
 
-    <!-- Main Content -->
-    <main class="main-content">
-      <h2>All Users</h2>
-
-      <div class="table-container">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Full Name</th>
-              <th>Reg No</th>
-              <th>Department</th>
-              <th>Image</th>
-              <th>Manage</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>1</td>
-              <td>John Doe</td>
-              <td>24/SC/CO/01</td>
-              <td>Computer Science</td>
-              <td><img src="john.jpg" alt="John Doe"></td>
-              <td><button class="view">View</button></td>
-            </tr>
-            <tr>
-              <td>2</td>
-              <td>Mary Smith</td>
-              <td>24/SC/CO/02</td>
-              <td>Information Technology</td>
-              <td><img src="mary.jpg" alt="Mary Smith"></td>
-              <td><button class="view">View</button></td>
-            </tr>
-            <tr>
-              <td>3</td>
-              <td>Vincent Clement</td>
-              <td>24/SC/CO/03</td>
-              <td>Computer Science</td>
-              <td><img src="vincent.jpg" alt="Vincent Clement"></td>
-              <td><button class="view">View</button></td>
-            </tr>
-            <tr>
-              <td>4</td>
-              <td>Grace Daniel</td>
-              <td>24/SC/CO/04</td>
-              <td>Software Engineering</td>
-              <td><img src="grace.jpg" alt="Grace Daniel"></td>
-              <td><button class="view">View</button></td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-
-    </main>
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Full Name</th>
+          <th>Reg No</th>
+          <th>Department</th>
+          <th>Image</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+        <tr>
+          <td>{{ user.id }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.reg_number }}</td>
+          <td>{{ user.department }}</td>
+          <td>
+            {% if user.photo_path %}
+              <img src="/static/uploads/{{ user.photo_path }}" alt="{{ user.name }}">
+            {% else %}
+              <img src="/static/images/placeholder.png" alt="No photo">
+            {% endif %}
+          </td>
+          <td>
+            <a href="/admin/users/{{ user.id }}" class="btn-view">View</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
-
-  <!-- Footer -->
- <footer class="footer">
-    © 2025 Faculty of Computer Science. All rights reserved. <br>
-    Terms of service.  Privacy policy
-  </footer>
-</body>
-</html>
+</div>
+{% endblock %}
