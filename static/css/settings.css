@@ -1,0 +1,186 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f5f6fa;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+header {
+  background: #003366;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 25px;
+}
+
+header .logo-section {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+header img {
+  height: 40px;
+  border-radius: 50%;
+}
+
+.logout-btn {
+  background: #dc2626;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.logout-btn:hover {
+  background: #b91c1c;
+}
+
+/* Container */
+.container {
+  flex: 1;
+  display: flex;
+}
+
+/* Sidebar */
+nav {
+  width: 220px;
+  background: #1f2937;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+nav a {
+  text-decoration: none;
+  color: white;
+  padding: 12px 20px;
+  transition: 0.3s;
+}
+
+nav a:hover,
+nav a.active {
+  background: #374151;
+}
+
+/* Main Content */
+main {
+  flex: 1;
+  padding: 25px;
+  background: #f9fafb;
+  overflow-y: auto;
+  
+}
+
+main h2 {
+  color: #003366;
+  margin-bottom: 15px;
+  margin-left: 35%;
+}
+main h3{
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+.settings-section {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.settings-section h3 {
+  color: #003366;
+  margin-bottom: 15px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  margin: 8px 0 4px;
+  font-weight: 600;
+}
+
+input {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 15px;
+  width: 30%;
+}
+#passcode {
+  background: #0066cc;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 25%;
+}
+
+.save-btn {
+  background: #003366;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  width: 15%;
+
+}
+.image {
+  margin-top: 20px;
+  /* text-align: center; */
+  margin-left: 50%;
+  position: absolute;
+  top: 35%;
+}
+
+.save-btn:hover {
+  background: #00254d;
+}
+
+/* System Config */
+.config-items p {
+  margin: 6px 0;
+  font-size: 15px;
+}
+
+.status {
+  padding: 3px 8px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
+}
+
+.connected {
+  background: #16a34a;
+}
+
+.warning {
+  background: #9ca3af;
+}
+
+/* Footer */
+footer {
+  background: #003366;
+  color: white;
+  text-align: center;
+  padding: 10px 0;
+  font-size: 14px;
+}

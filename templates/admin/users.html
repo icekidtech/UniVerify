@@ -1,53 +1,95 @@
-{% extends "admin/base_admin.html" %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Faculty Admin Dashboard - Users</title>
+  <link rel="stylesheet" href="/UniVerify/static/css/users.css">
+</head>
+<body>
 
-{% block title %}Manage Users{% endblock %}
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-left">
+      <img src="/UniVerify/static/images/FOCOSA_LOGO-removebg-preview.png" alt="Logo" class="logo">
+      <h1>Faculty Admin Dashboard</h1>
+    </div>
+    <button class="logout-btn">Logout</button>
+  </nav>
 
-{% block content %}
+  <!-- Layout Wrapper -->
+  <div class="dashboard-container">
 
-<div class="dashboard-title">
-    <h2>All Students</h2>
-</div>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <ul>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="requests.html">Requests</a></li>
+        <li class="active"><a href="users.html">Users</a></li>
+        <li><a href="settings.html">Settings</a></li>
+      </ul>
+    </aside>
 
-<div class="overview" style="margin: 0;">
-    <table>
-        <thead>
+    <!-- Main Content -->
+    <main class="main-content">
+      <h2>All Users</h2>
+
+      <div class="table-container">
+        <table>
+          <thead>
             <tr>
-                <th>ID</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Reg No.</th>
-                <th>Department</th>
-                <th>Phone</th>
-                <th>Status</th>
-                <th>Registered</th>
+              <th>ID</th>
+              <th>Full Name</th>
+              <th>Reg No</th>
+              <th>Department</th>
+              <th>Image</th>
+              <th>Manage</th>
             </tr>
-        </thead>
-        <tbody>
-            {% for student in students %}
+          </thead>
+          <tbody>
             <tr>
-                <td>{{ student.id }}</td>
-                <td>{{ student.name }}</td>
-                <td>{{ student.email }}</td>
-                <td>{{ student.reg_number }}</td>
-                <td>{{ student.department }}</td>
-                <td>{{ student.phone }}</td>
-                <td>
-                    {% if student.status == 'approved' %}
-                        <span class="status approved">Approved</span>
-                    {% elif student.status == 'pending' %}
-                        <span class="status pending">Pending</span>
-                    {% elif student.status == 'rejected' %}
-                        <span class="status rejected">Rejected</span>
-                    {% endif %}
-                </td>
-                <td>{{ student.submitted_at.strftime('%Y-%m-%d %H:%M') if student.submitted_at else 'N/A' }}</td>
+              <td>1</td>
+              <td>John Doe</td>
+              <td>24/SC/CO/01</td>
+              <td>Computer Science</td>
+              <td><img src="john.jpg" alt="John Doe"></td>
+              <td><button class="view">View</button></td>
             </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% if not students %}
-    <p class="text-muted mt-3" style="padding: 20px;">No students found.</p>
-    {% endif %}
-</div>
+            <tr>
+              <td>2</td>
+              <td>Mary Smith</td>
+              <td>24/SC/CO/02</td>
+              <td>Information Technology</td>
+              <td><img src="mary.jpg" alt="Mary Smith"></td>
+              <td><button class="view">View</button></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>Vincent Clement</td>
+              <td>24/SC/CO/03</td>
+              <td>Computer Science</td>
+              <td><img src="vincent.jpg" alt="Vincent Clement"></td>
+              <td><button class="view">View</button></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>Grace Daniel</td>
+              <td>24/SC/CO/04</td>
+              <td>Software Engineering</td>
+              <td><img src="grace.jpg" alt="Grace Daniel"></td>
+              <td><button class="view">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
 
-{% endblock %}
+    </main>
+  </div>
+
+  <!-- Footer -->
+ <footer class="footer">
+    © 2025 Faculty of Computer Science. All rights reserved. <br>
+    Terms of service.  Privacy policy
+  </footer>
+</body>
+</html>
