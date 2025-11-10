@@ -8,4 +8,5 @@ sqlmodel==0.0.14
 passlib[bcrypt]==1.7.4
 pyjwt[crypto]==2.8.0
 python-dotenv==1.0.0
-httpx==0.25.2  # For HTMX interactions if needed
+httpx==0.25.2
+bcrypt==4.1.2
