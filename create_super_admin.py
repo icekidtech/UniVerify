@@ -2,7 +2,6 @@ from sqlmodel import create_engine, Session, select
 from app.models.models import Admin, SQLModel
 from app.config import settings
 from passlib.context import CryptContext
-import sys
 
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
@@ -35,9 +34,9 @@ def create_super_admin():
             return
         
         super_admin = Admin(
-            email=super_admin_email,
-            password_hash=hash_password(super_admin_password),
-            name=super_admin_name,
+            email=super_admin_email, # type: ignore
+            password_hash=hash_password(super_admin_password), # type: ignore
+            name=super_admin_name, # type: ignore
             role="super_admin",
             department=None,
             series=None,
