@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Faculty Admin Dashboard - Settings</title>
-  <link rel="stylesheet" href="/UniVerify/static/css/settings.css" />
+  <link rel="stylesheet" href="/static/css/settings.css">
 </head>
 <body>
   <!-- Header -->
@@ -27,36 +27,126 @@
 
     <!-- Main Content -->
     <main>
-      <h2>Admin Settings</h2>
-      <div class="settings-section">
-        <h3>Profile Settings</h3>
-        <form>
-          <label for="admin-name">Admin Name</label>
-          <input type="text" id="admin-name" value="Vincent Clement" />
+      <div class="main-content">
+        <h2>Account Settings</h2>
 
-          <label for="admin-email">Email Address</label>
-          <input type="email" id="admin-email" value="admin@faculty.edu" /> <br> <br>
+        <!-- Profile Settings Section -->
+        <div class="settings-section">
+          <h3>Profile Settings</h3>
+          <form method="POST" action="/settings/update" id="settings-form">
+            <div class="form-group">
+              <label for="user-name">Full Name</label>
+              <input type="text" id="user-name" name="name" value="{{ user.name }}" required />
+            </div>
 
-          <!-- <label for="admin-password">Change Password</label>
-          <input type="password" id="admin-password" placeholder="Enter new password" /> -->
+            <div class="form-group">
+              <label for="user-email">Email Address</label>
+              <input type="email" id="user-email" name="email" value="{{ user.email }}" required />
+            </div>
 
-          <button type="generate" id="passcode"> CLICK TO GENERATE PASSCODE</button> <br><br>
+            {% if user_type == 'student' %}
+              <div class="form-group">
+                <label for="user-phone">Phone Number</label>
+                <input type="tel" id="user-phone" name="phone" value="{{ user.phone }}" required />
+              </div>
 
-          <button type="submit" class="save-btn">Save Changes</button>
-          <div class="image">
-          <img src="/FOCOSA_LOGO-removebg-preview.png" alt="image here" width="200px">
-          </div>
-        </form>
-      </div>
+              <div class="form-group">
+                <label for="user-reg">Registration Number</label>
+                <input type="text" id="user-reg" name="reg_number" value="{{ user.reg_number }}" disabled />
+                <small>Registration number cannot be changed</small>
+              </div>
 
-      <div class="settings-section">
-        <h3>System Configuration</h3>
-        <div class="config-items">
-          <p><strong>Database Status:</strong> <span class="status connected">Connected</span></p>
-          <p><strong>Last Backup:</strong> <span class="status warning">Not Configured</span></p>
-          <p><strong>Faculty Code:</strong> FCS-2025</p>
-          <p><strong>Version:</strong> 1.0.2</p>
+              <div class="form-group">
+                <label for="user-department">Department</label>
+                <input type="text" id="user-department" name="department" value="{{ user.department }}" disabled />
+                <small>Department cannot be changed</small>
+              </div>
+            {% elif user_type == 'admin' %}
+              <div class="form-group">
+                <label for="admin-department">Department/Series</label>
+                <input type="text" id="admin-department" name="department" value="{{ user.department }}" required />
+              </div>
+
+              <div class="form-group">
+                <label>Admin Role</label>
+                <input type="text" value="{{ user.role | replace('_', ' ') | title }}" disabled />
+                <small>Role cannot be changed. Contact super admin for role changes.</small>
+              </div>
+            {% endif %}
+
+            <button type="submit" class="btn-save">Save Changes</button>
+          </form>
+
+          {% if user_type == 'student' %}
+            <div class="form-section-divider"></div>
+            <h4>Passcode Management</h4>
+            <p class="section-info">Your passcode is used to log in to the system. Keep it safe and secure.</p>
+            <button type="button" id="regenerate-passcode-btn" class="btn-secondary">
+              Regenerate Passcode
+            </button>
+            <div id="passcode-feedback" class="feedback-message" style="display: none;"></div>
+          {% endif %}
         </div>
+
+        <!-- System Info Section -->
+        <div class="settings-section">
+          <h3>System Information</h3>
+          <div class="config-items">
+            {% if user_type == 'admin' %}
+              <p>
+                <strong>Admin Role:</strong> 
+                <span class="badge">{{ user.role | replace("_", " ") | title }}</span>
+              </p>
+            {% endif %}
+            <p>
+              <strong>Account Status:</strong> 
+              <span class="status {% if user.is_active %}connected{% else %}warning{% endif %}">
+                {% if user.is_active %}Active{% else %}Inactive{% endif %}
+              </span>
+            </p>
+            {% if user_type == 'student' %}
+              <p>
+                <strong>Verification Status:</strong> 
+                <span class="status 
+                  {% if user.status == 'approved' %}connected
+                  {% elif user.status == 'pending' %}warning
+                  {% elif user.status == 'rejected' %}danger
+                  {% endif %}">
+                  {{ user.status | capitalize }}
+                </span>
+              </p>
+            {% endif %}
+            <p>
+              <strong>Account Created:</strong> 
+              <span>{{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'N/A' }}</span>
+            </p>
+            <p>
+              <strong>Last Updated:</strong> 
+              <span>{{ user.updated_at.strftime('%B %d, %Y %I:%M %p') if user.updated_at else 'N/A' }}</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- System Status Section (Admin Only) -->
+        {% if user_type == 'admin' %}
+          <div class="settings-section">
+            <h3>System Status</h3>
+            <div class="config-items">
+              <p>
+                <strong>Database Status:</strong> 
+                <span class="status connected">Connected</span>
+              </p>
+              <p>
+                <strong>System Version:</strong> 
+                <span>1.0.2</span>
+              </p>
+              <p>
+                <strong>Faculty Code:</strong> 
+                <span>FCS-2025</span>
+              </p>
+            </div>
+          </div>
+        {% endif %}
       </div>
     </main>
   </div>

@@ -184,3 +184,179 @@ footer {
   padding: 10px 0;
   font-size: 14px;
 }
+
+/* Admin Settings Page */
+
+.main-content {
+  flex: 1;
+  padding: 30px;
+  background: #f9fafb;
+  overflow-y: auto;
+}
+
+.main-content h2 {
+  color: var(--primary-color);
+  margin-bottom: 25px;
+  font-size: 22px;
+}
+
+.settings-section {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 25px;
+}
+
+.settings-section h3 {
+  color: var(--primary-color);
+  margin-bottom: 20px;
+  font-size: 18px;
+}
+
+/* Form Styling */
+.form-group {
+  margin-bottom: 15px;
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+  color: #333;
+  font-size: 14px;
+}
+
+.form-group input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  font-family: 'Segoe UI', sans-serif;
+  transition: border-color 0.3s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 4px rgba(0, 51, 102, 0.1);
+}
+
+/* Buttons */
+.btn-passcode {
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  width: fit-content;
+}
+
+.btn-passcode:hover {
+  background: #002244;
+}
+
+.btn-save {
+  background: var(--primary-color);
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background-color 0.3s;
+  width: fit-content;
+}
+
+.btn-save:hover {
+  background: #002244;
+}
+
+/* System Config Items */
+.config-items {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.config-items p {
+  margin: 0;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.status {
+  padding: 4px 12px;
+  border-radius: 20px;
+  color: white;
+  font-weight: 600;
+  font-size: 12px;
+}
+
+.status.connected {
+  background-color: var(--success-color);
+}
+
+.status.warning {
+  background-color: var(--warning-color);
+  color: #333;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 20px;
+  }
+
+  .settings-section {
+    padding: 15px;
+  }
+
+  .form-group {
+    margin-bottom: 12px;
+  }
+
+  .form-group input {
+    font-size: 16px; /* Prevents zoom on mobile */
+  }
+}
+
+@media (max-width: 480px) {
+  .main-content {
+    padding: 15px;
+  }
+
+  .settings-section {
+    padding: 12px;
+    margin-bottom: 15px;
+  }
+
+  .settings-section h3 {
+    font-size: 16px;
+  }
+
+  .main-content h2 {
+    font-size: 20px;
+    margin-bottom: 15px;
+  }
+
+  .config-items p {
+    font-size: 13px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .btn-passcode,
+  .btn-save {
+    width: 100%;
+  }
+}
