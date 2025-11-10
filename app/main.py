@@ -102,7 +102,7 @@ async def register(
     # Basic validations
     if not email.endswith("@gmail.com"):
         errors.append("Email must be from gmail.com domain.")
-    if department not in ["SE", "CS", "IS", "DS", "CY"]:
+    if department not in ["Software Engineering", "Computer Science", "Information Systems", "Data Science", "Cybersecurity"]:
         errors.append("Invalid department.")
     if not photo.filename or not photo.filename.lower().endswith(('.png', '.jpg', '.jpeg')):
         errors.append("Photo must be PNG or JPEG.")
@@ -345,7 +345,7 @@ async def admin_requests(request: Request, current_admin: Admin = Depends(get_cu
                 Student.department == current_admin.department
             )).all()
 
-    return templates.TemplateResponse("admin/requests.html", {
+    return templates.TemplateResponse("admin/users_request.html", {
         "request": request,
         "admin": current_admin,
         "students": students
