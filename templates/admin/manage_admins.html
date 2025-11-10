@@ -1,0 +1,124 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Manage Admins - Faculty of Computing Student Management System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/manage_admins.css">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="page-header">
+    <h2>Admin Management</h2>
+    <button id="add-admin-btn" class="btn-primary">+ Add New Admin</button>
+  </div>
+
+  {% if message %}
+    <div class="alert alert-{{ message_type }}">{{ message }}</div>
+  {% endif %}
+
+  <div class="table-container">
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Role</th>
+          <th>Department</th>
+          <th>Status</th>
+          <th>Created At</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for admin in admins %}
+        <tr>
+          <td>{{ admin.id }}</td>
+          <td>{{ admin.name }}</td>
+          <td>{{ admin.email }}</td>
+          <td>
+            <span class="badge badge-{{ admin.role }}">
+              {{ admin.role | replace('_', ' ') | title }}
+            </span>
+          </td>
+          <td>{{ admin.department if admin.department else 'N/A' }}</td>
+          <td>
+            <span class="status {% if admin.is_active %}connected{% else %}warning{% endif %}">
+              {% if admin.is_active %}Active{% else %}Inactive{% endif %}
+            </span>
+          </td>
+          <td>{{ admin.created_at.strftime('%b %d, %Y') }}</td>
+          <td class="action-buttons">
+            <a href="/admin/edit-admin/{{ admin.id }}" class="btn-edit">Edit</a>
+            {% if admin.id != current_admin.id %}
+              <button class="btn-toggle-status" data-admin-id="{{ admin.id }}" data-status="{{ admin.is_active }}">
+                {% if admin.is_active %}Deactivate{% else %}Activate{% endif %}
+              </button>
+            {% endif %}
+            {% if admin.role != 'super_admin' and admin.id != current_admin.id %}
+              <button class="btn-delete" data-admin-id="{{ admin.id }}">Delete</button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add/Edit Admin Modal -->
+<div id="admin-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close">&times;</span>
+    <h3 id="modal-title">Add New Admin</h3>
+    
+    <form id="admin-form" method="POST">
+      <div class="form-group">
+        <label for="admin-name">Full Name</label>
+        <input type="text" id="admin-name" name="name" required />
+      </div>
+
+      <div class="form-group">
+        <label for="admin-email">Email Address</label>
+        <input type="email" id="admin-email" name="email" required />
+      </div>
+
+      <div class="form-group">
+        <label for="admin-password">Password</label>
+        <input type="password" id="admin-password" name="password" />
+        <small id="password-hint" style="display: none;">Leave blank to keep current password</small>
+      </div>
+
+      <div class="form-group">
+        <label for="admin-role">Role</label>
+        <select id="admin-role" name="role" required>
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="super_admin">Super Admin</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="admin-department">Department/Series</label>
+        <input type="text" id="admin-department" name="department" placeholder="e.g., Software Engineering" />
+      </div>
+
+      <div class="form-group">
+        <label for="admin-status">Status</label>
+        <select id="admin-status" name="is_active">
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-save">Save Admin</button>
+        <button type="button" class="btn-cancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/static/js/manage_admins.js"></script>
+{% endblock %}
