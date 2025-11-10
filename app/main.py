@@ -407,16 +407,16 @@ async def reject_student(request: Request, student_id: int, current_admin: Admin
 async def admin_users(request: Request, current_admin: Admin = Depends(get_current_admin)):
     with Session(engine) as session:
         if current_admin.role == "super_admin":
-            students = session.exec(select(Student)).all()
+            users = session.exec(select(Student)).all()
         else:
-            students = session.exec(select(Student).where(
+            users = session.exec(select(Student).where(
                 Student.department == current_admin.department
             )).all()
 
     return templates.TemplateResponse("admin/users.html", { # type: ignore
         "request": request,
         "admin": current_admin,
-        "students": students
+        "users": users  # ← Changed from "students" to "users"
     })
 
 @app.get("/admin/logout")
