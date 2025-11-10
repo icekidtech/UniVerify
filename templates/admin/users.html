@@ -18,29 +18,43 @@
           <th>Full Name</th>
           <th>Reg No</th>
           <th>Department</th>
+          <th>Status</th>
           <th>Image</th>
           <th>Action</th>
         </tr>
       </thead>
       <tbody>
-        {% for user in users %}
-        <tr>
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.reg_number }}</td>
-          <td>{{ user.department }}</td>
-          <td>
-            {% if user.photo_path %}
-              <img src="/static/uploads/{{ user.photo_path }}" alt="{{ user.name }}">
-            {% else %}
-              <img src="/static/images/placeholder.png" alt="No photo">
-            {% endif %}
-          </td>
-          <td>
-            <a href="/admin/users/{{ user.id }}" class="btn-view">View</a>
-          </td>
-        </tr>
-        {% endfor %}
+        {% if users %}
+          {% for user in users %}
+          <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.reg_number }}</td>
+            <td>{{ user.department }}</td>
+            <td>
+              <span class="status {% if user.status == 'approved' %}approved{% elif user.status == 'pending' %}pending{% elif user.status == 'rejected' %}rejected{% endif %}">
+                {{ user.status | capitalize }}
+              </span>
+            </td>
+            <td>
+              {% if user.photo_path %}
+                <img src="/static/uploads/{{ user.photo_path }}" alt="{{ user.name }}">
+              {% else %}
+                <img src="/static/images/placeholder.png" alt="No photo">
+              {% endif %}
+            </td>
+            <td>
+              <a href="/admin/users/{{ user.id }}" class="btn-view">View</a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="7" style="text-align: center; padding: 20px;">
+              No users found
+            </td>
+          </tr>
+        {% endif %}
       </tbody>
     </table>
   </div>
