@@ -431,6 +431,13 @@ async def logout(request: Request):
     response.delete_cookie("access_token")
     return response
 
+@app.get("/logout-admin-to-student")
+async def logout_admin_to_student(request: Request):
+    """Log out admin and redirect to student login"""
+    response = RedirectResponse(url="/login", status_code=303)
+    response.delete_cookie("admin_token")
+    return response
+
 # ============= SETTINGS ROUTES (STUDENT & ADMIN) =============
 
 @app.get("/settings")
@@ -448,7 +455,8 @@ async def settings_page(request: Request):
                     return templates.TemplateResponse("settings.html", { # type: ignore
                         "request": request,
                         "user": admin,
-                        "user_type": "admin"
+                        "user_type": "admin",
+                        "admin": admin  # ← Add this for base_admin.html compatibility
                     })
     
     # Fall back to student token
@@ -537,12 +545,12 @@ async def manage_admins(request: Request, current_admin: Admin = Depends(get_cur
         raise HTTPException(status_code=403, detail="Only super admins can access this page")
 
     with Session(engine) as session:
-        admins = session.exec(select(Admin)).all()
+        admins = session.exec(select(Admin)).all() # type: ignore
 
-    return templates.TemplateResponse("admin/manage_admins.html", { # pyright: ignore[reportUnknownMemberType]
+    return templates.TemplateResponse("admin/manage_admins.html", { # type: ignore
         "request": request,
-        "current_admin": current_admin,
-        "admins": admins
+        "admin": current_admin,
+        "current_admin": current_admin  # ← Add this for manage_admins.html
     })
 
 @app.post("/admin/add-admin")
