@@ -5,9 +5,17 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
 body {
     background-color: #f4f6f9;
     color: #333;
+    display: flex;
+    flex-direction: column;
 }
 
 /* Navbar */
@@ -18,6 +26,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-shrink: 0;
 }
 
 .navbar img {
@@ -32,6 +41,7 @@ body {
     font-size: 28px;
     font-weight: bold;
     margin: 0;
+    color: white;
 }
 
 .admin-user-info {
@@ -58,10 +68,11 @@ body {
     background-color: #b91c1c;
 }
 
-/* Admin Container */
+/* Admin Container - Full Height */
 .admin-container {
     display: flex;
-    min-height: calc(100vh - 80px);
+    flex: 1;
+    min-height: 0;
 }
 
 .admin-sidebar {
@@ -72,6 +83,7 @@ body {
     flex-shrink: 0;
     display: flex;
     flex-direction: column;
+    min-height: 100%;
 }
 
 .admin-sidebar a {
@@ -145,105 +157,105 @@ body {
     font-weight: bold;
 }
 
-.blue {
-    background-color: #003366;
+.card-total {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 }
 
-.green {
-    background-color: #15361d;
+.card-approved {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
 }
 
-.yellow {
-    background-color: #ffc107;
-    color: #000;
+.card-pending {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
-.teal {
-    background-color: #0056b3;
+.card-rejected {
+    background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
 }
 
-/* System Overview and Activities */
-.system-section {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 20px;
+/* Quick Links Section */
+.quick-links {
     padding: 0 40px;
+    margin-bottom: 30px;
 }
 
-.overview, .activities {
-    background: #fff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
-}
-
-.overview h4, .activities h4 {
-    margin-bottom: 15px;
+.quick-links h3 {
     font-size: 18px;
-    color: #222;
+    color: #003366;
+    margin-bottom: 15px;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-table th {
-    background-color: #003366;
-    color: white;
-    padding: 12px;
-    text-align: left;
-    font-weight: 600;
-}
-
-table td {
-    padding: 10px 12px;
-    border-bottom: 1px solid #eee;
-}
-
-table tbody tr:hover {
-    background-color: #f9fafb;
-}
-
-.status {
+.quick-links a {
     display: inline-block;
-    padding: 6px 12px;
-    border-radius: 15px;
-    font-size: 12px;
-    font-weight: bold;
+    background: #003366;
+    color: white;
+    padding: 10px 20px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: background-color 0.3s;
 }
 
-.connected {
-    background: #d4edda;
-    color: #155724;
+.quick-links a:hover {
+    background-color: #002244;
 }
 
-.not-configured {
-    background: #f8d7da;
-    color: #721c24;
+/* System Overview */
+.system-section {
+    padding: 0 40px;
+    margin-bottom: 30px;
+}
+
+.system-section h3 {
+    font-size: 18px;
+    color: #003366;
+    margin-bottom: 15px;
+}
+
+.system-overview {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.overview-item {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.overview-item strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #003366;
+}
+
+.overview-item p {
+    margin: 0;
+    color: #666;
 }
 
 /* Quick Actions */
 .quick-actions {
-    padding: 20px 40px;
-    margin-top: 30px;
+    padding: 0 40px;
+    margin-bottom: 30px;
 }
 
-.quick-actions h4 {
-    margin-bottom: 15px;
+.quick-actions h3 {
     font-size: 18px;
-    color: #222;
+    color: #003366;
+    margin-bottom: 15px;
 }
 
 .action-buttons {
     display: flex;
-    gap: 15px;
+    gap: 10px;
     flex-wrap: wrap;
 }
 
 .btn {
-    background-color: #003366;
-    color: #fff;
     padding: 10px 20px;
     border-radius: 6px;
     border: none;
@@ -289,19 +301,35 @@ table tbody tr:hover {
 footer {
     text-align: center;
     padding: 20px;
-    margin-top: 40px;
     background: #003366;
     color: #fff;
+    flex-shrink: 0;
 }
 
 /* Responsive */
 @media (max-width: 1024px) {
-    .system-section {
-        grid-template-columns: 1fr;
+    .navbar {
+        padding: 15px 30px;
     }
-    
+
     .navbar h1 {
         font-size: 24px;
+    }
+
+    .stats-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .system-section {
+        padding: 0 30px;
+    }
+
+    .quick-actions {
+        padding: 0 30px;
+    }
+
+    .quick-links {
+        padding: 0 30px;
     }
 }
 
@@ -314,6 +342,7 @@ footer {
         width: 100%;
         flex-direction: row;
         padding: 10px 0;
+        min-height: auto;
     }
 
     .admin-sidebar a {
@@ -348,6 +377,24 @@ footer {
         width: 100%;
         justify-content: space-between;
     }
+
+    .quick-links {
+        padding: 0 20px;
+    }
+
+    .system-section {
+        padding: 0 20px;
+    }
+
+    .quick-actions {
+        padding: 0 20px;
+    }
+
+    .quick-links a {
+        padding: 8px 15px;
+        font-size: 13px;
+        margin-right: 5px;
+    }
 }
 
 @media (max-width: 480px) {
@@ -368,6 +415,11 @@ footer {
         overflow-x: auto;
     }
 
+    .admin-sidebar a {
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
     .admin-content {
         padding: 15px;
     }
@@ -379,5 +431,30 @@ footer {
 
     .card p {
         font-size: 18px;
+    }
+
+    .quick-links {
+        padding: 0 15px;
+    }
+
+    .quick-links a {
+        padding: 6px 10px;
+        font-size: 11px;
+    }
+
+    .system-section {
+        padding: 0 15px;
+    }
+
+    .quick-actions {
+        padding: 0 15px;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
     }
 }
