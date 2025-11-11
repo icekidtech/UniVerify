@@ -236,8 +236,20 @@ async def dashboard(request: Request, current_user: Student = Depends(get_curren
                     AccessToken.group_id == group.id,
                     AccessToken.used == False
                 )).first()
-                if existing_token and existing_token.expires_at > datetime.now(timezone.utc):
-                    token = existing_token.token
+                
+                now_utc = datetime.now(timezone.utc)
+                
+                # FIX: Handle both naive and aware datetimes
+                token_valid = False
+                if existing_token and existing_token.expires_at:
+                    expires = existing_token.expires_at
+                    # If naive, make it aware
+                    if expires.tzinfo is None:
+                        expires = expires.replace(tzinfo=timezone.utc)
+                    token_valid = expires > now_utc
+                
+                if token_valid:
+                    token = existing_token.token # type: ignore
                 else:
                     token_data = {"student_id": current_user.id, "group_id": group.id}
                     token = jwt.encode(token_data, settings.jwt_secret_key, algorithm="HS256")
@@ -249,8 +261,17 @@ async def dashboard(request: Request, current_user: Student = Depends(get_curren
                     )
                     session.add(access_token)
                     session.commit()
-                links.append({"name": group.name, "url": f"/r/{token}"}) # type: ignore
-    return templates.TemplateResponse("dashboard.html", {"request": request, "user": current_user, "links": links}) # type: ignore # type: ignore
+                
+                links.append({ # type: ignore
+                    "name": group.name,
+                    "url": f"/r/{token}"
+                })
+
+    return templates.TemplateResponse("dashboard.html", { # type: ignore
+        "request": request,
+        "user": current_user,
+        "links": links
+    })
 
 @app.get("/r/{token}")
 async def redirect_link(token: str):
