@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Faculty of Computing Student Management System{% endblock %}</title>
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/student_dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navbar -->
+    <div class="navbar">
+        <div style="display: flex; align-items: center; gap: 15px;">
+            <img src="/static/images/FOCOSA_LOGO-removebg-preview.png" alt="FOCOSA Logo" style="height: 50px; width: auto;">
+            <h1>Faculty of Computing - Student Portal</h1>
+        </div>
+        <div class="admin-user-info">
+            <span class="admin-name">{{ user.name }}</span>
+            <a href="/logout" class="logout-link">Logout</a>
+        </div>
+    </div>
+
+    <!-- Main Container with Sidebar -->
+    <div class="student-container">
+        
+        <!-- Sidebar -->
+        <nav class="student-sidebar">
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/settings">Settings</a>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="student-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        © 2025 Faculty of Computing Student Management System. All Rights Reserved.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+</html>
