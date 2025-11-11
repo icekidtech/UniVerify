@@ -1,53 +1,44 @@
-{% extends "base.html" %}
+{% extends "student_base.html" %}
 
 {% block title %}Student Dashboard - Faculty of Computing Student Management System{% endblock %}
 
-{% block extra_css %}
-<link rel="stylesheet" href="/static/css/dashboard.css">
-{% endblock %}
-
 {% block content %}
-<div class="container mt-5">
-    <div class="dashboard-header">
-        <h1>Welcome, {{ user.name }}</h1>
-        <p><strong>Department:</strong> {{ user.department }}</p>
-        <p><strong>Registration Number:</strong> {{ user.reg_number }}</p>
-    </div>
+<div class="dashboard-header">
+    <h2>Welcome, {{ user.name }}</h2>
+    <p><strong>Department:</strong> {{ user.department }}</p>
+    <p><strong>Registration Number:</strong> {{ user.reg_number }}</p>
+</div>
 
-    <div class="dashboard-status">
-        <strong>Status:</strong> 
-        {% if user.status == "pending" %}
-            <span class="badge bg-warning">Pending Approval</span>
-        {% elif user.status == "approved" %}
-            <span class="badge bg-success">Approved</span>
-        {% elif user.status == "rejected" %}
-            <span class="badge bg-danger">Rejected</span>
-        {% endif %}
-    </div>
+<div class="dashboard-status">
+    <strong>Status:</strong> 
+    {% if user.status == "pending" %}
+        <span class="badge bg-warning">Pending Approval</span>
+    {% elif user.status == "approved" %}
+        <span class="badge bg-success">Approved</span>
+    {% elif user.status == "rejected" %}
+        <span class="badge bg-danger">Rejected</span>
+    {% endif %}
+</div>
 
-    {% if user.status == "approved" %}
-        <div class="dashboard-links-section">
-            <h3>Your WhatsApp Group Links</h3>
-            <p class="text-muted">Links expire in 7 days and can only be used once.</p>
-            <div class="list-group">
+{% if user.status == "approved" %}
+    <div class="dashboard-links-section">
+        <h3>Your WhatsApp Group Links</h3>
+        {% if links %}
+            <div class="links-grid">
                 {% for link in links %}
-                    <a href="{{ link.url }}" class="list-group-item list-group-item-action">
-                        <strong>{{ link.name }}</strong>
-                        <span class="badge bg-primary float-end">Join Now</span>
+                    <a href="{{ link.url }}" class="link-card" target="_blank">
+                        <p>{{ link.group_name }}</p>
                     </a>
                 {% endfor %}
             </div>
-        </div>
-    {% elif user.status == "pending" %}
-        <div class="alert alert-warning">
-            Your registration is pending approval. Please check back later.
-        </div>
-    {% elif user.status == "rejected" %}
-        <div class="alert alert-danger">
-            Your registration has been rejected. Please contact support.
-        </div>
-    {% endif %}
-
-    <hr>
-</div>
+        {% else %}
+            <p>No links available at this time.</p>
+        {% endif %}
+    </div>
+{% elif user.status == "pending" %}
+    <div class="pending-message">
+        <h4>Pending Approval</h4>
+        <p>Your registration is pending approval. Please check back later.</p>
+    </div>
+{% endif %}
 {% endblock %}
