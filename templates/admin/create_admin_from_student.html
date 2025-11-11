@@ -1,0 +1,179 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Create Admin from Student - Faculty of Computing Student Management System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/create_admin.css">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="page-header">
+    <h2>Create Admin Account from Student</h2>
+    <a href="/admin/manage-admins" class="btn-secondary">← Back to Admins</a>
+  </div>
+
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+
+  {% if message %}
+    <div class="alert alert-{{ message_type }}">{{ message }}</div>
+  {% endif %}
+
+  <div class="create-admin-container">
+    
+    <!-- Step 1: Select Student -->
+    <div class="form-section">
+      <h3>Step 1: Select Student Account</h3>
+      <p class="section-description">Choose an existing student account to convert to admin. Only approved students are available.</p>
+      
+      <div class="search-box">
+        <input 
+          type="text" 
+          id="student-search" 
+          placeholder="Search by name, email, or reg number..." 
+          class="search-input"
+        />
+      </div>
+
+      <div class="student-grid" id="student-grid">
+        <!-- Students loaded via JavaScript -->
+        <div class="loading">Loading students...</div>
+      </div>
+    </div>
+
+    <!-- Step 2: Configure Admin -->
+    <form id="admin-form" method="POST" action="/admin/create-from-student" style="display: none;">
+      <div class="form-section">
+        <h3>Step 2: Configure Admin Account</h3>
+
+        <!-- Hidden student ID -->
+        <input type="hidden" id="selected-student-id" name="student_id" />
+
+        <!-- Student Info Display -->
+        <div class="student-info-display">
+          <div class="info-item">
+            <label>Student Name</label>
+            <p id="display-name"></p>
+          </div>
+          <div class="info-item">
+            <label>Email</label>
+            <p id="display-email"></p>
+          </div>
+          <div class="info-item">
+            <label>Reg Number</label>
+            <p id="display-reg"></p>
+          </div>
+          <div class="info-item">
+            <label>Department</label>
+            <p id="display-dept"></p>
+          </div>
+          <div class="info-item">
+            <label>Series</label>
+            <p id="display-series"></p>
+          </div>
+        </div>
+
+        <!-- Admin Role Selection -->
+        <div class="form-group">
+          <label for="admin-role">Admin Role *</label>
+          <div class="radio-group">
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="role" 
+                value="admin" 
+                required 
+                onchange="updateDepartmentField()"
+              />
+              <span>Regular Admin (Manage specific department)</span>
+            </label>
+            <label class="radio-label">
+              <input 
+                type="radio" 
+                name="role" 
+                value="super_admin" 
+                onchange="updateDepartmentField()"
+              />
+              <span>Super Admin (Full series access)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Department Selection (for Regular Admins) -->
+        <div class="form-group" id="department-group" style="display: none;">
+          <label for="admin-department">Department/Unit *</label>
+          <select id="admin-department" name="department" required>
+            <option value="">Select Department</option>
+            <option value="Software Engineering">Software Engineering</option>
+            <option value="Information Systems">Information Systems</option>
+            <option value="Computer Science">Computer Science</option>
+            <option value="Cyber Security">Cyber Security</option>
+            <option value="Data Science">Data Science</option>
+          </select>
+          <small>Choose which department this admin will manage within their series.</small>
+        </div>
+
+        <!-- Password -->
+        <div class="form-group">
+          <label for="admin-password">Set Password *</label>
+          <div class="password-input-group">
+            <input 
+              type="password" 
+              id="admin-password" 
+              name="password" 
+              placeholder="Enter strong password" 
+              required 
+            />
+            <button type="button" class="toggle-password" onclick="togglePassword()">👁️</button>
+          </div>
+          <small>Must be at least 8 characters with uppercase, lowercase, and numbers.</small>
+        </div>
+
+        <!-- Password Strength Indicator -->
+        <div id="password-strength" class="password-strength">
+          <div class="strength-bar">
+            <div id="strength-fill"></div>
+          </div>
+          <small id="strength-text"></small>
+        </div>
+
+        <!-- Confirm Password -->
+        <div class="form-group">
+          <label for="confirm-password">Confirm Password *</label>
+          <input 
+            type="password" 
+            id="confirm-password" 
+            placeholder="Re-enter password" 
+            required 
+            onchange="validatePasswordMatch()"
+          />
+          <small id="password-mismatch" style="color: red; display: none;">Passwords do not match!</small>
+        </div>
+
+        <!-- Summary -->
+        <div class="admin-summary">
+          <h4>Admin Account Summary</h4>
+          <div class="summary-content">
+            <p><strong>Email:</strong> <span id="summary-email"></span></p>
+            <p><strong>Name:</strong> <span id="summary-name"></span></p>
+            <p><strong>Role:</strong> <span id="summary-role"></span></p>
+            <p><strong>Series:</strong> <span id="summary-series"></span></p>
+            <p id="summary-dept" style="display: none;"><strong>Department:</strong> <span id="summary-dept-value"></span></p>
+            <p><strong>Status:</strong> <span class="badge badge-success">Active</span></p>
+          </div>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="form-actions">
+          <button type="submit" class="btn-primary">Create Admin Account</button>
+          <button type="button" class="btn-secondary" onclick="backToStudentSelection()">Back</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/static/js/create_admin_from_student.js"></script>
+{% endblock %}
