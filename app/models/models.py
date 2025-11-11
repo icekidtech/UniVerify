@@ -1,4 +1,4 @@
-from sqlmodel import SQLModel, Field
+from sqlmodel import SQLModel, Field # type: ignore
 from datetime import datetime, timezone
 from typing import Optional
 
@@ -39,8 +39,10 @@ class AccessToken(SQLModel, table=True):
     student_id: int = Field(foreign_key="student.id")
     group_id: int = Field(foreign_key="whatsappgroup.id")
     token: str
-    expires_at: datetime
     used: bool = False
+    # FIX: Always use timezone-aware datetime
+    expires_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 class AuditLog(SQLModel, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
