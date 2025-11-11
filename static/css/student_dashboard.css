@@ -54,8 +54,9 @@ body {
 .admin-name {
     color: white;
     font-size: 14px;
-    font-weight: 500;
+    font-weight: 700;
     white-space: nowrap;
+    letter-spacing: 0.3px;
 }
 
 .logout-link {
@@ -109,42 +110,27 @@ body {
     min-height: 100%;
 }
 
-.student-sidebar a {
+.student-sidebar .sidebar-nav-link {
     display: block;
     color: white;
     padding: 12px 20px;
     text-decoration: none;
-    transition: background-color 0.3s;
+    transition: all 0.3s ease;
     border-left: 4px solid transparent;
+    font-weight: 500;
 }
 
-.student-sidebar a:hover {
+.student-sidebar .sidebar-nav-link:hover {
     background-color: #374151;
     border-left-color: #ffc107;
-}
-
-.student-sidebar a.active {
-    background-color: #374151;
-    border-left-color: #ffc107;
-}
-
-.student-sidebar a.sidebar-link {
-    display: block;
-    color: white;
-    padding: 12px 20px;
     text-decoration: none;
-    transition: background-color 0.3s;
-    border-left: 4px solid transparent;
+    color: white;
 }
 
-.student-sidebar a.sidebar-link:hover {
+.student-sidebar .sidebar-nav-link.active {
     background-color: #374151;
     border-left-color: #ffc107;
-}
-
-.student-sidebar a.sidebar-link.active {
-    background-color: #374151;
-    border-left-color: #ffc107;
+    color: white;
 }
 
 .sidebar-divider {
