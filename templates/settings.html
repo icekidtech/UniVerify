@@ -1,7 +1,7 @@
 {% if user_type == 'admin' %}
   {% extends "admin/base_admin.html" %}
 {% else %}
-  {% extends "base.html" %}
+  {% extends "student_base.html" %}
 {% endif %}
 
 {% block title %}Settings - Faculty of Computing Student Management System{% endblock %}
@@ -11,12 +11,38 @@
 {% endblock %}
 
 {% block content %}
-<div class="main-content">
+<div class="settings-container">
   <h2>Account Settings</h2>
 
   <!-- Profile Settings Section -->
   <div class="settings-section">
     <h3>Profile Settings</h3>
+    
+    <!-- User Avatar/Image -->
+    <div class="user-avatar-section">
+      {% if user_type == 'student' and user.photo_path %}
+        <img src="/{{ user.photo_path }}" alt="{{ user.name }}" class="user-avatar">
+      {% elif user_type == 'admin' %}
+        <div class="user-avatar admin-avatar">
+          {{ user.name | first | upper }}
+        </div>
+      {% else %}
+        <div class="user-avatar default-avatar">
+          {{ user.name | first | upper }}
+        </div>
+      {% endif %}
+      <div class="avatar-info">
+        <p><strong>{{ user.name }}</strong></p>
+        <p class="avatar-role">
+          {% if user_type == 'admin' %}
+            {{ user.role | replace("_", " ") | title }}
+          {% else %}
+            {{ user.department }}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
     <form method="POST" action="/settings/update" id="settings-form">
       <div class="form-group">
         <label for="user-name">Full Name</label>
@@ -31,66 +57,43 @@
       {% if user_type == 'student' %}
         <div class="form-group">
           <label for="user-phone">Phone Number</label>
-          <input type="tel" id="user-phone" name="phone" value="{{ user.phone or '' }}" />
-        </div>
-
-        <div class="form-group">
-          <label for="user-reg">Registration Number</label>
-          <input type="text" id="user-reg" name="reg_number" value="{{ user.reg_number }}" disabled />
-          <small>Registration number cannot be changed</small>
+          <input type="tel" id="user-phone" name="phone" value="{{ user.phone }}" required />
         </div>
 
         <div class="form-group">
           <label for="user-department">Department</label>
-          <input type="text" id="user-department" name="department" value="{{ user.department }}" disabled />
+          <input type="text" id="user-department" value="{{ user.department }}" disabled />
           <small>Department cannot be changed</small>
         </div>
-      {% elif user_type == 'admin' %}
-        <div class="form-group">
-          <label for="admin-department">Department/Series</label>
-          <input type="text" id="admin-department" name="department" value="{{ user.department or '' }}" />
-        </div>
-
-        <div class="form-group">
-          <label>Admin Role</label>
-          <input type="text" value="{{ user.role | replace('_', ' ') | title }}" disabled />
-          <small>Role cannot be changed. Contact super admin for role changes.</small>
-        </div>
       {% endif %}
 
-      <button type="submit" class="btn-save">Save Changes</button>
+      <button type="submit" class="save-btn">Save Changes</button>
     </form>
-
-    {% if user_type == 'student' %}
-      <div class="form-section-divider"></div>
-      <h4>Passcode Management</h4>
-      <p class="section-info">Your passcode is used to log in to the system. Keep it safe and secure.</p>
-      <button type="button" id="regenerate-passcode-btn" class="btn-secondary">
-        Regenerate Passcode
-      </button>
-      <div id="passcode-feedback" class="feedback-message" style="display: none;"></div>
-    {% endif %}
   </div>
 
-  <!-- System Info Section -->
+  <!-- Passcode Management (Student Only) -->
+  {% if user_type == 'student' %}
+    <div class="settings-section">
+      <h3>Passcode Management</h3>
+      <p>Your passcode is used to log in to the system. Keep it safe and secure.</p>
+      <button class="btn btn-warning" onclick="regeneratePasscode()">Regenerate Passcode</button>
+    </div>
+  {% endif %}
+
+  <!-- Account Information Section -->
   <div class="settings-section">
-    <h3>System Information</h3>
-    <div class="config-items">
-      {% if user_type == 'admin' %}
-        <p>
-          <strong>Admin Role:</strong> 
-          <span class="badge badge-{{ user.role }}">{{ user.role | replace("_", " ") | title }}</span>
-        </p>
-      {% endif %}
-      <p>
-        <strong>Account Status:</strong> 
+    <h3>Account Information</h3>
+    <div class="info-grid">
+      <div class="info-item">
+        <strong>Account Status:</strong>
         <span class="status {% if user.is_active %}connected{% else %}warning{% endif %}">
           {% if user.is_active %}Active{% else %}Inactive{% endif %}
         </span>
-      </p>
+      </div>
+
       {% if user_type == 'student' %}
-        <p>
-          <strong>Verification Status:</strong> 
+        <div class="info-item">
+          <strong>Verification Status:</strong>
           <span class="status 
             {% if user.status == 'approved' %}connected
             {% elif user.status == 'pending' %}warning
@@ -98,16 +101,30 @@
             {% endif %}">
             {{ user.status | capitalize }}
           </span>
-        </p>
+        </div>
+
+        <div class="info-item">
+          <strong>Registration Number:</strong>
+          <span>{{ user.reg_number }}</span>
+        </div>
+      {% elif user_type == 'admin' %}
+        <div class="info-item">
+          <strong>Role:</strong>
+          <span>{{ user.role | replace("_", " ") | title }}</span>
+        </div>
+
+        {% if user.department %}
+          <div class="info-item">
+            <strong>Department:</strong>
+            <span>{{ user.department }}</span>
+          </div>
+        {% endif %}
       {% endif %}
-      <p>
-        <strong>Account Created:</strong> 
+
+      <div class="info-item">
+        <strong>Account Created:</strong>
         <span>{{ user.created_at.strftime('%B %d, %Y') if user.created_at else 'N/A' }}</span>
-      </p>
-      <p>
-        <strong>Last Updated:</strong> 
-        <span>{{ user.updated_at.strftime('%B %d, %Y %I:%M %p') if user.updated_at else 'N/A' }}</span>
-      </p>
+      </div>
     </div>
   </div>
 
@@ -117,15 +134,15 @@
       <h3>System Status</h3>
       <div class="config-items">
         <p>
-          <strong>Database Status:</strong> 
+          <strong>Database Status:</strong>
           <span class="status connected">Connected</span>
         </p>
         <p>
-          <strong>System Version:</strong> 
+          <strong>System Version:</strong>
           <span>1.0.2</span>
         </p>
         <p>
-          <strong>Faculty Code:</strong> 
+          <strong>Faculty Code:</strong>
           <span>FCS-2025</span>
         </p>
       </div>
@@ -134,4 +151,5 @@
 </div>
 
 <script src="/static/js/settings.js"></script>
+<script src="/static/js/student-base.js"></script>
 {% endblock %}
