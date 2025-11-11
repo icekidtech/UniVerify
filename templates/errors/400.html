@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bad Request - Faculty of Computing Student Management System</title>
+    <link rel="stylesheet" href="/static/css/global.css">
+    <link rel="stylesheet" href="/static/css/errors.css">
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-content">
+            <div class="error-icon error-icon-400">⚠️</div>
+            <h1>400 - Bad Request</h1>
+            <p class="error-message">The request could not be understood by the server. Please check your input and try again.</p>
+            <div class="error-details">
+                <p><strong>What went wrong?</strong></p>
+                <ul>
+                    <li>Invalid form data submitted</li>
+                    <li>Missing required fields</li>
+                    <li>Malformed request</li>
+                </ul>
+            </div>
+            <div class="error-actions">
+                <a href="/" class="btn-primary">Go to Home</a>
+                <button onclick="history.back()" class="btn-secondary">Go Back</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
