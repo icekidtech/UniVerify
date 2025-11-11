@@ -1,0 +1,218 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}Manage Series - Faculty of Computing Student Management System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/manage_series.css">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="page-header">
+    <h2>Series Management</h2>
+    <button id="add-series-btn" class="btn-primary">+ Create New Series</button>
+  </div>
+
+  {% if message %}
+    <div class="alert alert-{{ message_type }}">{{ message }}</div>
+  {% endif %}
+
+  <!-- Series Overview Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <h4>Total Series</h4>
+      <p class="stat-number">{{ series_stats.total }}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Active Series</h4>
+      <p class="stat-number">{{ series_stats.active }}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Total Students</h4>
+      <p class="stat-number">{{ series_stats.total_students }}</p>
+    </div>
+    <div class="stat-card">
+      <h4>Total Admins</h4>
+      <p class="stat-number">{{ series_stats.total_admins }}</p>
+    </div>
+  </div>
+
+  <!-- Series Table -->
+  <div class="table-container">
+    <table class="series-table">
+      <thead>
+        <tr>
+          <th>Series Code</th>
+          <th>Name</th>
+          <th>Students</th>
+          <th>Admins</th>
+          <th>Groups</th>
+          <th>Status</th>
+          <th>Created</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% if series %}
+          {% for s in series %}
+          <tr>
+            <td><strong>{{ s.series_code }}</strong></td>
+            <td>{{ s.name }}</td>
+            <td>
+              <span class="badge badge-info">{{ s.student_count }}</span>
+            </td>
+            <td>
+              <span class="badge badge-success">{{ s.admin_count }}</span>
+            </td>
+            <td>
+              <span class="badge badge-warning">{{ s.group_count }}</span>
+            </td>
+            <td>
+              {% if s.is_active %}
+                <span class="status-badge active">Active</span>
+              {% else %}
+                <span class="status-badge inactive">Inactive</span>
+              {% endif %}
+            </td>
+            <td>{{ s.created_at.strftime('%Y-%m-%d') }}</td>
+            <td class="action-buttons">
+              <button class="btn-sm btn-info" onclick="editSeries({{ s.id }})">Edit</button>
+              <button class="btn-sm btn-warning" onclick="viewSeriesDetails({{ s.id }})">Details</button>
+              <button class="btn-sm btn-danger" onclick="deleteSeries({{ s.id }})">Delete</button>
+            </td>
+          </tr>
+          {% endfor %}
+        {% else %}
+          <tr>
+            <td colspan="8" class="text-center">No series found. Create one to get started!</td>
+          </tr>
+        {% endif %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Add/Edit Series Modal -->
+<div id="series-modal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <span class="close" onclick="closeSeries Modal()">&times;</span>
+    <h3 id="modal-title">Create New Series</h3>
+    
+    <form id="series-form" method="POST">
+      <div class="form-group">
+        <label for="series-code">Series Code *</label>
+        <input 
+          type="text" 
+          id="series-code" 
+          name="series_code" 
+          placeholder="e.g., 024, 025" 
+          maxlength="3"
+          required 
+        />
+        <small>Format: 3-digit code (e.g., 024 for 24/sc/co/xxxx)</small>
+      </div>
+
+      <div class="form-group">
+        <label for="series-name">Series Name *</label>
+        <input 
+          type="text" 
+          id="series-name" 
+          name="name" 
+          placeholder="e.g., 2024 Cohort" 
+          required 
+        />
+      </div>
+
+      <div class="form-group">
+        <label for="series-description">Description</label>
+        <textarea 
+          id="series-description" 
+          name="description" 
+          placeholder="Brief description of this series"
+          rows="4"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="series-status">Status</label>
+        <select id="series-status" name="is_active">
+          <option value="true">Active</option>
+          <option value="false">Inactive</option>
+        </select>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn-primary">Save Series</button>
+        <button type="button" class="btn-secondary" onclick="closeSeriesModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Series Details Modal -->
+<div id="details-modal" class="modal" style="display: none;">
+  <div class="modal-content large">
+    <span class="close" onclick="closeDetailsModal()">&times;</span>
+    <h3>Series Details: <span id="detail-series-code"></span></h3>
+    
+    <div class="details-tabs">
+      <button class="tab-btn active" onclick="showTab('overview')">Overview</button>
+      <button class="tab-btn" onclick="showTab('students')">Students</button>
+      <button class="tab-btn" onclick="showTab('admins')">Admins</button>
+      <button class="tab-btn" onclick="showTab('groups')">WhatsApp Groups</button>
+    </div>
+
+    <!-- Overview Tab -->
+    <div id="overview" class="tab-content active">
+      <div class="details-grid">
+        <div class="detail-item">
+          <label>Series Code</label>
+          <p id="detail-code"></p>
+        </div>
+        <div class="detail-item">
+          <label>Series Name</label>
+          <p id="detail-name"></p>
+        </div>
+        <div class="detail-item">
+          <label>Status</label>
+          <p id="detail-status"></p>
+        </div>
+        <div class="detail-item">
+          <label>Created Date</label>
+          <p id="detail-created"></p>
+        </div>
+        <div class="detail-item">
+          <label>Description</label>
+          <p id="detail-description"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Students Tab -->
+    <div id="students" class="tab-content">
+      <h4>Students in this Series</h4>
+      <div id="students-list" class="list-container">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <!-- Admins Tab -->
+    <div id="admins" class="tab-content">
+      <h4>Admins Managing this Series</h4>
+      <div id="admins-list" class="list-container">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+
+    <!-- Groups Tab -->
+    <div id="groups" class="tab-content">
+      <h4>WhatsApp Groups</h4>
+      <div id="groups-list" class="list-container">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="/static/js/manage_series.js"></script>
+{% endblock %}
