@@ -6,6 +6,8 @@ from sqlmodel import create_engine, Session, select
 from app.models.models import Student, WhatsAppGroup, AccessToken, Admin, AuditLog
 from app.config import settings
 from passlib.context import CryptContext
+from fastapi.responses import FileResponse # type: ignore
+from fastapi.exceptions import RequestValidationError
 import hashlib
 from difflib import SequenceMatcher
 import os
@@ -101,6 +103,7 @@ async def register(
     department: str = Form(...),
     photo: UploadFile = File(...),
 ):
+    """Register student with auto-series assignment"""
     errors = []
 
     # Basic validations
@@ -133,7 +136,7 @@ async def register(
         # Fuzzy match name + department (85%+)
         existing_students = session.exec(select(Student)).all()
         for student in existing_students:
-            if SequenceMatcher(None, name.lower(), student.name.lower()).ratio() > 0.85 and department == student.department:
+            if SequenceMatcher(None, name.lower(), student.name.lower()).ratio() > 0.85 and department == student.department: # type: ignore
                 errors.append("Potential duplicate: similar name and department found.") # type: ignore
                 break
 
@@ -159,10 +162,17 @@ async def register(
         with open(photo_path, "wb") as f:
             f.write(photo_content)
 
-        # Generate unique passcode
-        passcode = generate_passcode()
+        # NEW: Auto-assign series based on reg number
+        from app.utils.utils import extract_series_from_reg_number, get_series_by_code # type: ignore
+        series_code = extract_series_from_reg_number(reg_number) # type: ignore
+        series = get_series_by_code(session, series_code) # type: ignore
+        
+        if not series:
+            errors.append(f"Series {series_code} not found. Please contact admin.") # type: ignore
+            return templates.TemplateResponse("register.html", {"request": request, "errors": errors}) # type: ignore
 
-        # Create student with passcode
+        # Create student
+        passcode = generate_passcode()
         student = Student(
             name=name,
             email=email,
@@ -170,13 +180,24 @@ async def register(
             reg_number=reg_number,
             department=department,
             photo_path=photo_path,
-            passcode=passcode
+            passcode=passcode,
+            series_id=series.id  # type: ignore
         )
+        
         session.add(student)
         session.commit()
 
-        # Redirect to passcode backup page
-        return templates.TemplateResponse("passcode_backup.html", {"request": request, "passcode": passcode}) # type: ignore
+        # FIXED: Pass all required variables to template
+        return templates.TemplateResponse(  # type: ignore
+            "register_success.html",
+            {
+                "request": request,
+                "student": student,  # ← Add this
+                "name": name,  # ← Add this
+                "email": email,  # ← Add this
+                "passcode": passcode  # ← Add this
+            }
+        )
 
 @app.get("/login")
 async def login_form(request: Request):
@@ -718,3 +739,41 @@ async def admin_settings(request: Request, current_admin: Admin = Depends(get_cu
         "user": current_admin,
         "user_type": "admin"
     })
+
+################ ERROR HANDLERS ################
+
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+    """Handle validation errors (400)"""
+    return templates.TemplateResponse("errors/400.html", {"request": request}, status_code=400) # type: ignore
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+    """Handle HTTP exceptions based on status code"""
+    if exc.status_code == 403:
+        return templates.TemplateResponse("errors/403.html", {"request": request}, status_code=403) # type: ignore
+    elif exc.status_code == 404:
+        return templates.TemplateResponse("errors/404.html", {"request": request}, status_code=404) # type: ignore
+    elif exc.status_code == 400:
+        return templates.TemplateResponse("errors/400.html", {"request": request}, status_code=400) # type: ignore
+    else:
+        return templates.TemplateResponse("errors/500.html", {"request": request}, status_code=500) # type: ignore
+
+@app.exception_handler(Exception)
+async def general_exception_handler(request: Request, exc: Exception):
+    """Handle unexpected errors (500)"""
+    import traceback
+    logging.error(f"Unhandled exception: {traceback.format_exc()}")
+    return templates.TemplateResponse("errors/500.html", {"request": request}, status_code=500) # type: ignore
+
+@app.get("/error-test/{code}")
+async def error_test(code: int):
+    """Test error pages (development only)"""
+    if code == 400:
+        raise HTTPException(status_code=400, detail="Bad Request")
+    elif code == 403:
+        raise HTTPException(status_code=403, detail="Forbidden")
+    elif code == 404:
+        raise HTTPException(status_code=404, detail="Not Found")
+    elif code == 500:
+        raise HTTPException(status_code=500, detail="Server Error")
