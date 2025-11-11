@@ -7,34 +7,165 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="/static/css/global.css">
     <link rel="stylesheet" href="/static/css/auth.css">
+    <link rel="stylesheet" href="/static/css/register_success.css">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-card">
-            <div style="text-align: center; margin-bottom: 25px;">
-                <img src="/static/images/FOCOSA_LOGO-removebg-preview.png" alt="FOCOSA Logo" style="height: 80px; width: auto;">
-            </div>
-            <div style="text-align: center; margin-bottom: 30px;">
-                <div style="font-size: 60px; margin-bottom: 15px;">✓</div>
-                <h1>Registration Successful!</h1>
-            </div>
-
-            <p class="subtitle">Your account has been created successfully. Your application is now pending review.</p>
-
-            <div style="background-color: #d4edda; border: 1px solid #c3e6cb; border-radius: 6px; padding: 15px; margin: 20px 0; color: #155724;">
-                <strong>What's Next?</strong>
-                <ul style="margin-bottom: 0; margin-top: 10px; padding-left: 20px;">
-                    <li>Your profile will be reviewed by an administrator</li>
-                    <li>You will receive a notification once approved</li>
-                    <li>Approved students can access WhatsApp community links</li>
-                </ul>
-            </div>
-
-            <div class="auth-footer" style="border-top: none; margin-top: 30px;">
-                <p style="margin-bottom: 15px;"><a href="/login" class="btn btn-primary w-100">Return to Login</a></p>
-                <p><a href="/">Back to Home</a></p>
-            </div>
+    <div class="success-container">
+      <div class="success-card">
+        <div class="success-header">
+          <div class="success-icon">✓</div>
+          <h1>Registration Successful!</h1>
         </div>
+  
+        <div class="success-message">
+          <p>Your account has been created successfully, <strong>{{ name }}</strong>!</p>
+          <p>Your application is now pending review by our administrators.</p>
+        </div>
+  
+        <!-- IMPORTANT: Passcode Display Section -->
+        <div class="passcode-section">
+          <div class="passcode-warning">
+            <strong>⚠️ Important: Save Your Passcode</strong>
+          </div>
+          
+          <p class="passcode-instruction">
+            Your unique passcode is required to log in once your account is approved. 
+            <strong>Write it down and keep it in a safe place.</strong> You will not be shown this passcode again.
+          </p>
+  
+          <div class="passcode-box">
+            <div class="passcode-label">Your Login Passcode:</div>
+            <div class="passcode-display">
+              <code id="passcode-text">{{ passcode }}</code>
+              <button class="copy-btn" onclick="copyPasscode()">
+                <span id="copy-text">📋 Copy</span>
+              </button>
+            </div>
+          </div>
+  
+          <div class="passcode-tips">
+            <h4>Passcode Tips:</h4>
+            <ul>
+              <li>✓ Write it down on paper and store securely</li>
+              <li>✓ Do not share your passcode with anyone</li>
+              <li>✓ Remember this for your login</li>
+              <li>✗ Do not share via email or messaging apps</li>
+              <li>✗ Do not take screenshots without deleting them</li>
+            </ul>
+          </div>
+  
+          <!-- Confirmation Checkbox -->
+          <div class="passcode-confirmation">
+            <label class="checkbox-label">
+              <input type="checkbox" id="passcode-confirmed" required />
+              <span>I have saved my passcode in a safe place</span>
+            </label>
+            <button 
+              id="continue-btn" 
+              class="btn-primary" 
+              onclick="proceedToHome()" 
+              disabled
+            >
+              I've Saved My Passcode - Continue
+            </button>
+          </div>
+        </div>
+  
+        <!-- What's Next -->
+        <div class="whats-next">
+          <h3>What Happens Next?</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-number">1</div>
+              <div class="timeline-content">
+                <strong>Account Review</strong>
+                <p>Your profile will be reviewed by an administrator</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-number">2</div>
+              <div class="timeline-content">
+                <strong>Approval Notification</strong>
+                <p>You'll receive an email once your account is approved</p>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-number">3</div>
+              <div class="timeline-content">
+                <strong>WhatsApp Access</strong>
+                <p>Access WhatsApp group links for your department and series</p>
+              </div>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Account Details Summary -->
+        <div class="account-summary">
+          <h3>Account Details</h3>
+          <div class="summary-grid">
+            <div class="summary-item">
+              <label>Name:</label>
+              <p>{{ name }}</p>
+            </div>
+            <div class="summary-item">
+              <label>Email:</label>
+              <p>{{ email }}</p>
+            </div>
+            <div class="summary-item">
+              <label>Status:</label>
+              <p><span class="badge badge-warning">Pending Review</span></p>
+            </div>
+            <div class="summary-item">
+              <label>Reg Number:</label>
+              <p>{{ student.reg_number }}</p>
+            </div>
+          </div>
+        </div>
+  
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+          <a href="/" class="btn-secondary">Back to Home</a>
+          <a href="/login" class="btn-primary">Go to Login</a>
+        </div>
+  
+        <!-- Support -->
+        <div class="support-info">
+          <p>If you have any questions, contact us at <strong>support@faculty.edu</strong></p>
+        </div>
+      </div>
     </div>
+  
+    <script>
+    function copyPasscode() {
+      const passcode = document.getElementById('passcode-text').textContent;
+      navigator.clipboard.writeText(passcode).then(() => {
+        const btn = event.target.closest('.copy-btn');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '<span id="copy-text">✓ Copied!</span>';
+        setTimeout(() => {
+          btn.innerHTML = originalText;
+        }, 2000);
+      }).catch(err => {
+        alert('Failed to copy. Please copy manually.');
+      });
+    }
+  
+    document.getElementById('passcode-confirmed').addEventListener('change', function() {
+      document.getElementById('continue-btn').disabled = !this.checked;
+    });
+  
+    function proceedToHome() {
+      window.location.href = '/';
+    }
+  
+    // Prevent accidental back navigation without confirming passcode saved
+    window.addEventListener('beforeunload', function(e) {
+      if (!document.getElementById('passcode-confirmed').checked) {
+        e.preventDefault();
+        e.returnValue = 'Make sure you have saved your passcode before leaving!';
+        return 'Make sure you have saved your passcode before leaving!';
+      }
+    });
+    </script>
 </body>
 </html>
