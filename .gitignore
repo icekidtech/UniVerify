@@ -112,3 +112,4 @@ dmypy.json
 univerify.db
 static/uploads/
 *.log
+.hintrc
