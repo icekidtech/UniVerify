@@ -219,87 +219,89 @@ footer {
     }
 }
 
-/* Navbar Styling */
+/* Navbar Styling - Consistent across Admin and Student */
 .navbar {
-    background-color: var(--primary-color) !important;
-    padding: 10px 40px !important;
+    background-color: var(--primary-color);
+    padding: 15px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .navbar-brand {
     display: flex;
     align-items: center;
     gap: 15px;
-    font-weight: bold;
-    font-size: 18px !important;
+    flex: 1;
 }
 
 .navbar-brand img {
-    height: 45px;
+    height: 50px;
     width: auto;
+    padding-left: 20px;
+    display: block;
 }
 
-.navbar-brand span {
+.navbar-brand h1 {
     color: white;
+    font-size: 24px;
+    font-weight: 700;
+    margin: 0;
+    padding: 0;
 }
 
-/* Navbar text and links */
-.navbar-text {
-    color: white !important;
+.admin-user-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.admin-name {
+    color: white;
     font-size: 14px;
+    font-weight: 500;
     white-space: nowrap;
 }
 
-.nav-link {
-    color: white !important;
-    transition: opacity 0.3s;
-}
-
-.nav-link:hover {
-    opacity: 0.8;
-}
-
-/* Logout link styling */
-.logout-nav-link {
-    background-color: var(--danger-color) !important;
-    color: white !important;
-    padding: 8px 15px !important;
+.logout-link {
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
     border-radius: 6px;
     font-weight: 600;
-    transition: background-color 0.3s;
+    font-size: 14px;
+    transition: background-color 0.3s, opacity 0.3s;
     display: inline-block;
+    border: none;
+    cursor: pointer;
 }
 
-.logout-nav-link:hover {
-    background-color: #b91c1c !important;
-    text-decoration: none !important;
+.logout-link:hover {
+    text-decoration: none;
+    opacity: 0.9;
 }
 
-/* Navbar responsiveness */
-@media (max-width: 992px) {
-    .navbar-brand span {
-        display: none;
-    }
-    
-    .navbar {
-        padding: 10px 20px !important;
-    }
+.settings-link {
+    background-color: #0084ff;
 }
 
-@media (max-width: 768px) {
-    .navbar-brand img {
-        height: 35px;
-    }
-    
-    .navbar-text {
-        font-size: 12px;
-    }
+.settings-link:hover {
+    background-color: #0073e6;
 }
 
-/* Add these styles to the existing global.css file */
+.logout-link:last-child {
+    background-color: var(--danger-color);
+}
+
+.logout-link:last-child:hover {
+    background-color: #b91c1c;
+}
 
 /* Main Content */
 .main-content {
     min-height: calc(100vh - 200px);
+    padding: 40px 20px;
 }
 
 /* Footer */
@@ -313,64 +315,84 @@ footer {
 
 .site-footer p {
     margin: 0;
+    font-size: 14px;
 }
 
-/* Auth Logo Styling */
-.auth-logo {
-    text-align: center;
-    margin-bottom: 25px;
+/* Responsive Navbar */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 15px 30px;
+    }
+
+    .navbar-brand h1 {
+        font-size: 20px;
+    }
+
+    .logout-link {
+        padding: 8px 12px;
+        font-size: 13px;
+    }
 }
 
-.auth-logo img {
-    height: 80px;
-    width: auto;
+@media (max-width: 768px) {
+    .navbar {
+        flex-wrap: wrap;
+        gap: 15px;
+        padding: 15px 20px;
+    }
+
+    .navbar-brand {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .navbar-brand h1 {
+        font-size: 18px;
+    }
+
+    .admin-user-info {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .logout-link {
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .main-content {
+        padding: 20px 15px;
+    }
 }
 
-/* Dashboard Header */
-.dashboard-header {
-    margin-bottom: 30px;
+@media (max-width: 480px) {
+    .navbar {
+        padding: 10px 15px;
+    }
+
+    .navbar-brand {
+        gap: 10px;
+    }
+
+    .navbar-brand img {
+        height: 40px;
+    }
+
+    .navbar-brand h1 {
+        font-size: 16px;
+    }
+
+    .admin-name {
+        display: none;
+    }
+
+    .logout-link {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .main-content {
+        padding: 15px 10px;
+    }
 }
 
-.dashboard-header h1 {
-    font-size: 32px;
-    font-weight: bold;
-    color: var(--primary-color);
-    margin-bottom: 15px;
-}
-
-.dashboard-header p {
-    font-size: 16px;
-    color: #666;
-    margin: 8px 0;
-}
-
-/* Dashboard Status */
-.dashboard-status {
-    margin-bottom: 30px;
-    padding: 15px;
-    background: #f8f9fa;
-    border-radius: 6px;
-}
-
-/* Dashboard Links Section */
-.dashboard-links-section {
-    margin-top: 30px;
-}
-
-.dashboard-links-section h3 {
-    color: var(--primary-color);
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.dashboard-links-section .list-group-item {
-    border: 1px solid #ddd;
-    margin-bottom: 10px;
-    border-radius: 6px;
-    transition: all 0.3s;
-}
-
-.dashboard-links-section .list-group-item:hover {
-    background-color: #f8f9fa;
-    box-shadow: 0 2px 8px rgba(0, 51, 102, 0.1);
-}
