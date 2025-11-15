@@ -1,0 +1,178 @@
+{% extends "admin/base_admin.html" %}
+
+{% block title %}User Details - Faculty of Computing Student Management System{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/user_detail.css">
+{% endblock %}
+
+{% block content %}
+<div class="main-content">
+  <div class="page-header">
+    <h2>User Details</h2>
+    <a href="/admin/users" class="btn-secondary">Back to Users</a>
+  </div>
+
+  <div class="detail-container">
+    <!-- User Photo Section -->
+    <div class="photo-section">
+      {% if user.photo_path %}
+        <img src="/{{ user.photo_path }}" alt="{{ user.name }}" class="user-photo">
+      {% else %}
+        <div class="user-photo placeholder">
+          <span>No Photo</span>
+        </div>
+      {% endif %}
+      <div class="photo-info">
+        <p><strong>Photo uploaded during registration</strong></p>
+      </div>
+    </div>
+
+    <!-- User Information Section -->
+    <div class="info-section">
+      <h3>Personal Information</h3>
+      <form id="user-form" class="detail-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input type="text" id="name" name="name" value="{{ user.name }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="email">Email Address</label>
+          <input type="email" id="email" name="email" value="{{ user.email }}" required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input type="tel" id="phone" name="phone" value="{{ user.phone or '' }}">
+        </div>
+
+        <div class="form-group">
+          <label for="reg_number">Registration Number</label>
+          <input type="text" id="reg_number" value="{{ user.reg_number }}" disabled>
+          <small>Registration number cannot be changed</small>
+        </div>
+
+        <div class="form-group">
+          <label for="department">Department</label>
+          <input type="text" id="department" value="{{ user.department }}" disabled>
+          <small>Department cannot be changed</small>
+        </div>
+
+        <div class="form-group">
+          <label for="status">Status</label>
+          <input type="text" id="status" value="{{ user.status | capitalize }}" disabled>
+        </div>
+
+        <div class="form-group">
+          <label for="created_at">Registration Date</label>
+          <input type="text" id="created_at" value="{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'N/A' }}" disabled>
+        </div>
+
+        <button type="submit" class="btn-primary">Save Changes</button>
+      </form>
+    </div>
+
+    <!-- Actions Section -->
+    <div class="actions-section">
+      <h3>Actions</h3>
+      
+      <div class="action-group">
+        <h4>Passcode Management</h4>
+        <p>Generate a new passcode for this user</p>
+        <button id="regenerate-passcode-btn" class="btn-warning">Generate New Passcode</button>
+      </div>
+
+      <div class="action-group danger">
+        <h4>Danger Zone</h4>
+        <p>Permanently delete this user from the system</p>
+        <button id="delete-user-btn" class="btn-danger">Delete User</button>
+      </div>
+    </div>
+
+    <!-- Feedback -->
+    <div id="feedback-message" class="feedback-message" style="display: none;"></div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const userForm = document.getElementById('user-form');
+  const regenerateBtn = document.getElementById('regenerate-passcode-btn');
+  const deleteBtn = document.getElementById('delete-user-btn');
+  const feedbackDiv = document.getElementById('feedback-message');
+  const userId = {{ user.id }};
+
+  // Update user details
+  userForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(userForm);
+
+    fetch(`/admin/users/${userId}/update`, {
+      method: 'POST',
+      body: formData
+    })
+    .then(r => r.json())
+    .then(data => {
+      showFeedback(data.message, data.success ? 'success' : 'error');
+      if (data.success) {
+        setTimeout(() => location.reload(), 2000);
+      }
+    })
+    .catch(error => {
+      showFeedback('Error updating user', 'error');
+    });
+  });
+
+  // Regenerate passcode
+  regenerateBtn.addEventListener('click', function() {
+    if (confirm('Generate a new passcode for this user?')) {
+      fetch(`/admin/users/${userId}/regenerate-passcode`, {
+        method: 'POST'
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showFeedback(`New passcode: ${data.passcode}`, 'success');
+        } else {
+          showFeedback(data.message || 'Error regenerating passcode', 'error');
+        }
+      })
+      .catch(error => {
+        showFeedback('Error regenerating passcode', 'error');
+      });
+    }
+  });
+
+  // Delete user
+  deleteBtn.addEventListener('click', function() {
+    if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+      fetch(`/admin/users/${userId}/delete`, {
+        method: 'POST'
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.success) {
+          showFeedback('User deleted successfully. Redirecting...', 'success');
+          setTimeout(() => window.location.href = '/admin/users', 2000);
+        } else {
+          showFeedback(data.message || 'Error deleting user', 'error');
+        }
+      })
+      .catch(error => {
+        showFeedback('Error deleting user', 'error');
+      });
+    }
+  });
+
+  function showFeedback(message, type) {
+    feedbackDiv.textContent = message;
+    feedbackDiv.className = `feedback-message ${type}`;
+    feedbackDiv.style.display = 'block';
+    setTimeout(() => {
+      feedbackDiv.style.display = 'none';
+    }, 5000);
+  }
+});
+</script>
+{% endblock %}
