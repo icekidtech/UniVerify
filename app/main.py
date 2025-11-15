@@ -34,7 +34,7 @@ SQLModel.metadata.create_all(engine)
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 def populate_groups():
-    with Session(engine) as session:
+    with Session(engine) as session: # pyright: ignore[reportUnknownVariableType]
         if not session.exec(select(WhatsAppGroup)).first():
             groups = [
                 WhatsAppGroup(name="Software Engineering", original_link="https://chat.whatsapp.com/SElink", is_active=True),
@@ -458,8 +458,101 @@ async def admin_users(request: Request, current_admin: Admin = Depends(get_curre
     return templates.TemplateResponse("admin/users.html", { # type: ignore
         "request": request,
         "admin": current_admin,
-        "users": users  # ← Changed from "students" to "users"
+        "users": users
     })
+
+@app.get("/admin/users/{user_id}")
+async def admin_user_detail(request: Request, user_id: int, current_admin: Admin = Depends(get_current_admin)):
+    """View detailed user information and manage"""
+    with Session(engine) as session:
+        user = session.get(Student, user_id)
+        
+        if not user:
+            return templates.TemplateResponse("error.html", { # pyright: ignore[reportUnknownMemberType]
+                "request": request,
+                "error": "User not found"
+            })
+        
+        # Check if admin has permission
+        if current_admin.role != "super_admin" and user.department != current_admin.department:
+            return templates.TemplateResponse("error.html", { # pyright: ignore[reportUnknownMemberType]
+                "request": request,
+                "error": "Access denied"
+            })
+        
+        return templates.TemplateResponse("admin/user_detail.html", { # pyright: ignore[reportUnknownMemberType]
+            "request": request,
+            "admin": current_admin,
+            "user": user
+        })
+
+@app.post("/admin/users/{user_id}/delete")
+async def admin_delete_user(request: Request, user_id: int, current_admin: Admin = Depends(get_current_admin)): # pyright: ignore[reportUnknownParameterType]
+    """Delete a user"""
+    with Session(engine) as session:
+        user = session.get(Student, user_id)
+        
+        if not user:
+            return {"success": False, "message": "User not found"} # type: ignore
+        
+        if current_admin.role != "super_admin" and user.department != current_admin.department:
+            return {"success": False, "message": "Access denied"} # type: ignore
+        
+        session.delete(user)
+        session.commit()
+        
+    return {"success": True, "message": "User deleted successfully"} # type: ignore
+
+@app.post("/admin/users/{user_id}/update")
+async def admin_update_user( # pyright: ignore[reportUnknownParameterType]
+    request: Request,
+    user_id: int,
+    name: str = Form(...),
+    email: str = Form(...),
+    phone: str = Form(...),
+    current_admin: Admin = Depends(get_current_admin)
+):
+    """Update user details"""
+    with Session(engine) as session:
+        user = session.get(Student, user_id)
+        
+        if not user:
+            return {"success": False, "message": "User not found"} # type: ignore
+        
+        if current_admin.role != "super_admin" and user.department != current_admin.department:
+            return {"success": False, "message": "Access denied"} # type: ignore
+        
+        user.name = name
+        user.email = email
+        user.phone = phone
+        session.add(user)
+        session.commit()
+        
+    return {"success": True, "message": "User updated successfully"} # type: ignore
+
+@app.post("/admin/users/{user_id}/regenerate-passcode")
+async def admin_regenerate_user_passcode( # pyright: ignore[reportUnknownParameterType]
+    request: Request,
+    user_id: int,
+    current_admin: Admin = Depends(get_current_admin)
+):
+    """Admin regenerate passcode for a user"""
+    new_passcode = generate_passcode()
+    
+    with Session(engine) as session:
+        user = session.get(Student, user_id)
+        
+        if not user:
+            return {"success": False, "message": "User not found"} # type: ignore
+        
+        if current_admin.role != "super_admin" and user.department != current_admin.department:
+            return {"success": False, "message": "Access denied"} # type: ignore
+        
+        user.passcode = new_passcode
+        session.add(user)
+        session.commit()
+        
+        return {"success": True, "passcode": new_passcode} # type: ignore
 
 @app.get("/admin/logout")
 async def admin_logout(request: Request):
